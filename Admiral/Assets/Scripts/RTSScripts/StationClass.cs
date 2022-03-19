@@ -54,6 +54,15 @@ public class StationClass : MonoBehaviour
     public int GunUpgradeCounts; 
     [HideInInspector]
     public int energyToNextUpgradeOfGun;
+    [HideInInspector]
+    public int energyToConnection;
+
+    [HideInInspector]
+    public int energyOfStationToUPGradeGun;
+    [HideInInspector]
+    public int energyOfStationToUPGradeStation;
+    [HideInInspector]
+    public int energyOfStationToSetConnection;
 
     [HideInInspector]
     public int Cruis4;
@@ -143,8 +152,6 @@ public class StationClass : MonoBehaviour
     public List<StationClass> groupsWhereTheStationIs;
     public List<StationClass> ConnectedStations;
 
-    [HideInInspector]
-    public int energyToConnection;
     [HideInInspector]
     public Color colorOfStationMat;
 

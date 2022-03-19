@@ -5,7 +5,9 @@ using UnityEngine;
 public class ConnectionCPUStations : MonoBehaviour
 {
     private const int BASE_STATION_DEFENCE_SHIPS_COUNT = 6;
-    private const int SHIPS_COUNT_MINIMUM_TO_ATTACK = 10;
+    private const int MINIMUM_ENENRGY_TO_START_STATION_UPGRADE_LOOP = 250;
+    private const int MINIMUM_ENENRGY_TO_START_GUN_UPGRADE_LOOP = 200;
+    private const int MINIMUM_ENENRGY_TO_START_SHIP_PRODUCE_LOOP = 100;
 
     [HideInInspector]
     public static GameObject ObjectPulled;
@@ -14,10 +16,10 @@ public class ConnectionCPUStations : MonoBehaviour
     private static LineRenderer lineToDragFromStation;
     private static StationClass stationConnectionStartFrom;
     private static StationClass stationToConnect;
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
+    //// Start is called before the first frame update
+    //void Start()
+    //{
+    //}
     public static void instantiateConnectionLine()
     {
         ObjectPulledList = ObjectPullerRTS.current.GetConnectionLinePull();
@@ -74,8 +76,8 @@ public class ConnectionCPUStations : MonoBehaviour
             stationToConnect.ConnectedStations.Add(stationConnectionStartFrom);
             stationToConnect.groupsWhereTheStationIs = newConnection;
             CommonProperties.energyOfStationGroups.Add(newConnection, 0);
-            CommonProperties.energyOfStationGroups[newConnection] = stationToConnect.energyOfStation + stationToConnect.energyToNextUpgradeOfGun + stationToConnect.energyToNextUpgradeOfStation +
-                stationConnectionStartFrom.energyOfStation + stationConnectionStartFrom.energyToNextUpgradeOfGun + stationConnectionStartFrom.energyToNextUpgradeOfStation;
+            CommonProperties.energyOfStationGroups[newConnection] = stationToConnect.energyOfStation + stationToConnect.energyOfStationToUPGradeStation + stationToConnect.energyOfStationToUPGradeGun + stationToConnect.energyOfStationToSetConnection +
+                stationConnectionStartFrom.energyOfStation + stationConnectionStartFrom.energyOfStationToUPGradeStation + stationConnectionStartFrom.energyOfStationToUPGradeGun + stationConnectionStartFrom.energyOfStationToSetConnection;
         }
         //connecting one station to the connection group
         else if (stationConnectionStartFrom.ConnectedStations.Count < 1)
@@ -85,8 +87,9 @@ public class ConnectionCPUStations : MonoBehaviour
             stationToConnect.ConnectedStations.Add(stationConnectionStartFrom);
             stationConnectionStartFrom.ConnectedStations.Add(stationToConnect);
             CommonProperties.energyOfStationGroups[stationToConnect.groupsWhereTheStationIs] += stationConnectionStartFrom.energyOfStation;
-            CommonProperties.energyOfStationGroups[stationToConnect.groupsWhereTheStationIs] += stationConnectionStartFrom.energyToNextUpgradeOfStation;
-            CommonProperties.energyOfStationGroups[stationToConnect.groupsWhereTheStationIs] += stationConnectionStartFrom.energyToNextUpgradeOfGun;
+            CommonProperties.energyOfStationGroups[stationToConnect.groupsWhereTheStationIs] += stationConnectionStartFrom.energyOfStationToUPGradeStation;
+            CommonProperties.energyOfStationGroups[stationToConnect.groupsWhereTheStationIs] += stationConnectionStartFrom.energyOfStationToUPGradeGun;
+            CommonProperties.energyOfStationGroups[stationToConnect.groupsWhereTheStationIs] += stationConnectionStartFrom.energyOfStationToSetConnection;
         }
         //connecting one station to the connection group
         else if (stationToConnect.ConnectedStations.Count < 1)
@@ -96,8 +99,9 @@ public class ConnectionCPUStations : MonoBehaviour
             stationToConnect.ConnectedStations.Add(stationConnectionStartFrom);
             stationConnectionStartFrom.ConnectedStations.Add(stationToConnect);
             CommonProperties.energyOfStationGroups[stationConnectionStartFrom.groupsWhereTheStationIs] += stationToConnect.energyOfStation;
-            CommonProperties.energyOfStationGroups[stationToConnect.groupsWhereTheStationIs] += stationToConnect.energyToNextUpgradeOfStation;
-            CommonProperties.energyOfStationGroups[stationToConnect.groupsWhereTheStationIs] += stationToConnect.energyToNextUpgradeOfGun;
+            CommonProperties.energyOfStationGroups[stationToConnect.groupsWhereTheStationIs] += stationToConnect.energyOfStationToUPGradeStation;
+            CommonProperties.energyOfStationGroups[stationToConnect.groupsWhereTheStationIs] += stationToConnect.energyOfStationToUPGradeGun;
+            CommonProperties.energyOfStationGroups[stationToConnect.groupsWhereTheStationIs] += stationToConnect.energyOfStationToSetConnection;
             //stationConnectionStartFrom.connectionsCount++;
             //stationToConnect.connectionsCount++;
         }
@@ -113,8 +117,9 @@ public class ConnectionCPUStations : MonoBehaviour
                     stationConnectionStartFrom.groupsWhereTheStationIs.Add(station);
                     station.groupsWhereTheStationIs = stationConnectionStartFrom.groupsWhereTheStationIs;
                     CommonProperties.energyOfStationGroups[stationConnectionStartFrom.groupsWhereTheStationIs] += station.energyOfStation;
-                    CommonProperties.energyOfStationGroups[stationToConnect.groupsWhereTheStationIs] += station.energyToNextUpgradeOfStation;
-                    CommonProperties.energyOfStationGroups[stationToConnect.groupsWhereTheStationIs] += station.energyToNextUpgradeOfGun;
+                    CommonProperties.energyOfStationGroups[stationToConnect.groupsWhereTheStationIs] += station.energyOfStationToUPGradeStation;
+                    CommonProperties.energyOfStationGroups[stationToConnect.groupsWhereTheStationIs] += station.energyOfStationToUPGradeGun;
+                    CommonProperties.energyOfStationGroups[stationToConnect.groupsWhereTheStationIs] += station.energyOfStationToSetConnection;
                 }
                 stationToConnect.ConnectedStations.Add(stationConnectionStartFrom);
                 stationConnectionStartFrom.ConnectedStations.Add(stationToConnect);
@@ -153,26 +158,55 @@ public class ConnectionCPUStations : MonoBehaviour
 
         //third is connections, upgrades, and guns
         else {
+            //if there will be any possiable connections and even if there is no enough energy yet, the goup accumulate the energy
             int possibleConnections = 0;
             for (int i = 0; i < groupsWhereTheStationIs.Count; i++)
             {
                 groupsWhereTheStationIs[i].checkIfStationCanConnect();
                 if (groupsWhereTheStationIs[i].stationToConnect != null)
                 {
-                    if (groupsWhereTheStationIs[i].energyToConnection <= CommonProperties.energyOfStationGroups[groupsWhereTheStationIs]) setConnections(groupsWhereTheStationIs[i], groupsWhereTheStationIs[i].stationToConnect);
+                    if (groupsWhereTheStationIs[i].energyToConnection <= CommonProperties.energyOfStationGroups[groupsWhereTheStationIs])
+                    {
+                        CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] -= groupsWhereTheStationIs[i].energyToConnection;
+                        setConnections(groupsWhereTheStationIs[i], groupsWhereTheStationIs[i].stationToConnect);
+                    }
                     else possibleConnections++;
                 }
             }
 
             if (possibleConnections == 0)
-            { //check if there are some possible connections and if there is no spend the energy to upgrade
-                for (int i = 0; i < groupsWhereTheStationIs.Count; i++)
+            {
+                if (Random.Range(0, 5) > 0)
                 {
-                    if (energyOfStationToUPGradeStation >= energyToNextUpgradeOfStation && stationCurrentLevel < upgradeCounts)
+                    if (CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] >= MINIMUM_ENENRGY_TO_START_STATION_UPGRADE_LOOP)
                     {
-                        energyOfStationToUPGradeStation -= energyToNextUpgradeOfStation;
-                        upgradeStation(stationCurrentLevel + 1);
-                        return; //breaking this method
+                        for (int i = 0; i < groupsWhereTheStationIs.Count; i++)
+                        {
+                            if (groupsWhereTheStationIs[i].energyToNextUpgradeOfStation <= CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] && groupsWhereTheStationIs[i].stationCurrentLevel < groupsWhereTheStationIs[i].upgradeCounts)
+                            {
+                                groupsWhereTheStationIs[i].utilaizeTheEnergyOfCPUGroup(3);
+                            }
+                        }
+                    }
+                    if (CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] >= MINIMUM_ENENRGY_TO_START_GUN_UPGRADE_LOOP)
+                    {
+                        for (int i = 0; i < groupsWhereTheStationIs.Count; i++)
+                        {
+                            if (groupsWhereTheStationIs[i].energyToNextUpgradeOfGun <= CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] && groupsWhereTheStationIs[i].stationGunLevel < groupsWhereTheStationIs[i].GunUpgradeCounts)
+                            {
+                                groupsWhereTheStationIs[i].utilaizeTheEnergyOfCPUGroup(4);
+                            }
+                        }
+                    }
+                }
+                else 
+                {
+                    if (CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] >= MINIMUM_ENENRGY_TO_START_SHIP_PRODUCE_LOOP)
+                    {
+                        for (int i = 0; i < groupsWhereTheStationIs.Count; i++)
+                        {
+                            if (groupsWhereTheStationIs[i].ShipsAssigned < groupsWhereTheStationIs[i].ShipsLimit) groupsWhereTheStationIs[i].utilaizeTheEnergyOfCPUGroup(2);
+                        }
                     }
                 }
             }
