@@ -147,7 +147,7 @@ public class StationCPU : StationClass
     {
         yield return new WaitForSeconds(Random.Range(0, 1f));
         if (distanceToEnergon() < energonCatchDistance) {
-            if (groupWhereTheStationIs != null && groupWhereTheStationIs.Count > 0)
+            if (groupWhereTheStationIs != null /*&& groupWhereTheStationIs.Count > 0*/)
             {
                 if (CommonProperties.energyOfStationGroups[groupWhereTheStationIs] >= energyRequiredToShot)
                 {
@@ -983,7 +983,8 @@ public class StationCPU : StationClass
         station.ShipsAssigned = ShipsAssigned;
         station.ConnectedStations.Clear();
         station.fillingLine.localPosition = new Vector3(0, 0, 0); //make full life to new station
-        if (groupWhereTheStationIs != null && groupWhereTheStationIs.Count > 0) connectUpgradedStationToGroup(station);
+        if (groupWhereTheStationIs != null /*&& groupWhereTheStationIs.Count > 0*/) connectUpgradedStationToGroup(station);
+        else station.groupWhereTheStationIs = null;
         ObjectPulled.transform.position = stationPosition;
         station.stationTransform = ObjectPulled.transform;
         station.stationPosition = stationPosition;
@@ -995,7 +996,7 @@ public class StationCPU : StationClass
         energyOfStationToUPGradeStation = 0;
         energyOfStationToSetConnection = 0;
         disactivateThisStation(station);
-        if (station.groupWhereTheStationIs == null || station.groupWhereTheStationIs.Count == 0) station.utilaizeTheEnergy(true); //using the energy of station to produce new ships. Used only by stand alone station
+        if (station.groupWhereTheStationIs == null /*|| station.groupWhereTheStationIs.Count == 0*/) station.utilaizeTheEnergy(true); //using the energy of station to produce new ships. Used only by stand alone station
     }
     //public override void disactivateThisStation(StationClass newStation)
     //{
@@ -1005,18 +1006,31 @@ public class StationCPU : StationClass
     //}
     private void connectUpgradedStationToGroup(StationCPU station)
     {
+        //determmine the group processes for new and old station
         station.groupWhereTheStationIs = groupWhereTheStationIs;
+        groupWhereTheStationIs.Remove(this);
         station.groupWhereTheStationIs.Add(station);
-        //station.connectedStationsCount = connectedStationsCount;
-        foreach (StationClass stationConnected in ConnectedStations)
+        for (int i = 0; i < CommonProperties.connectionLines[CPUNumber].Count; i++)
         {
-            station.ConnectedStations.Add(stationConnected);
+            if (CommonProperties.connectionLines[CPUNumber][i].stations.Contains(this))
+            {
+                CommonProperties.connectionLines[CPUNumber][i].reassignStationAfterUpgrade(this, station);
+            }
         }
+
+
+        //deal with connections
+        //connect upgraded station with old station connections
+        foreach (StationClass stationsConnectedToOldStation in ConnectedStations) station.ConnectedStations.Add(stationsConnectedToOldStation);
+        //connect old station connections with upgraded station
+        foreach (StationClass stationsConnectedToOldStation in ConnectedStations) stationsConnectedToOldStation.ConnectedStations.Add(station);
+        //sending the signal of cutting the connection with old station to other stations
+        foreach (StationClass stationsConnectedToOldStation in ConnectedStations) stationsConnectedToOldStation.ConnectedStations.Remove(this);
     }
 
     public override void checkIfStationCanConnect()
     {
-        if (groupWhereTheStationIs != null && groupWhereTheStationIs.Count > 0)
+        if (groupWhereTheStationIs != null /*&& groupWhereTheStationIs.Count > 0*/)
         {
             //if (CommonProperties.energyOfStationGroups[groupWhereTheStationIs] >= energyToConnection)
             //{

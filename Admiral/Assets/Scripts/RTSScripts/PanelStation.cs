@@ -127,7 +127,7 @@ public class PanelStation : MonoBehaviour
         stationPosition = this.station.stationPosition;
         //radiusOfShipsRingAroundStation = station.radiusOfShipsRingAroundStation;
         stepOfCircleAroundStationToLaunchShips = 0;
-        if (station.groupWhereTheStationIs != null && station.groupWhereTheStationIs.Count > 0) ConnectionsToken.SetActive(true);
+        if (station.groupWhereTheStationIs != null /*&& station.groupWhereTheStationIs.Count > 0*/) ConnectionsToken.SetActive(true);
     }
 
     private void checkIfStationCanUpgrade()
@@ -138,7 +138,7 @@ public class PanelStation : MonoBehaviour
             else if (station.stationCurrentLevel == 1) upgradeButtonImg.sprite = Station2Sprite;
             else if (station.stationCurrentLevel == 2) upgradeButtonImg.sprite = Station1Sprite;
             energyForUpgrade.text = station.energyToNextUpgradeOfStation.ToString();
-            if (station.groupWhereTheStationIs != null && station.groupWhereTheStationIs.Count > 0)
+            if (station.groupWhereTheStationIs != null /*&& station.groupWhereTheStationIs.Count > 0*/)
             {
                 if (CommonProperties.energyOfStationGroups[station.groupWhereTheStationIs] >= station.energyToNextUpgradeOfStation)
                 {
@@ -173,7 +173,7 @@ public class PanelStation : MonoBehaviour
             else if (station.stationCurrentLevel == 2) gunButtonImg.sprite = Gun2Sprite;
             else if (station.stationCurrentLevel == 3) gunButtonImg.sprite = Gun3Sprite;
             energyForGun.text = station.energyToNextUpgradeOfGun.ToString();
-            if (station.groupWhereTheStationIs != null && station.groupWhereTheStationIs.Count > 0)
+            if (station.groupWhereTheStationIs != null /*&& station.groupWhereTheStationIs.Count > 0*/)
             {
                 if (CommonProperties.energyOfStationGroups[station.groupWhereTheStationIs] >= station.energyToNextUpgradeOfGun)
                 {
@@ -244,7 +244,7 @@ public class PanelStation : MonoBehaviour
 
     private void updateStationUpgradeVariables()
     {
-        if (station.groupWhereTheStationIs != null && station.groupWhereTheStationIs.Count > 0)
+        if (station.groupWhereTheStationIs != null /*&& station.groupWhereTheStationIs.Count > 0*/)
         {
             if (CommonProperties.energyOfStationGroups[station.groupWhereTheStationIs] >= station.energyToNextUpgradeOfStation)
             {
@@ -269,7 +269,7 @@ public class PanelStation : MonoBehaviour
     }
     private void updateGunUpgradeVariables()
     {
-        if (station.groupWhereTheStationIs != null && station.groupWhereTheStationIs.Count > 0)
+        if (station.groupWhereTheStationIs != null /*&& station.groupWhereTheStationIs.Count > 0*/)
         {
             if (CommonProperties.energyOfStationGroups[station.groupWhereTheStationIs] >= station.energyToNextUpgradeOfGun)
             {
@@ -300,7 +300,7 @@ public class PanelStation : MonoBehaviour
     }
     private void checkIfShipsCanBeProduced()
     {
-        if (station.groupWhereTheStationIs != null && station.groupWhereTheStationIs.Count > 0) {
+        if (station.groupWhereTheStationIs != null /*&& station.groupWhereTheStationIs.Count > 0*/) {
             if (station.ShipsAssigned < station.ShipsLimit)
             {
                 if (energyCruiserCost <= CommonProperties.energyOfStationGroups[station.groupWhereTheStationIs])
@@ -438,7 +438,7 @@ public class PanelStation : MonoBehaviour
 
     private void consumeTheEnergy(int consumeAmount, bool isStationUpgrade)
     {
-        if (station.groupWhereTheStationIs != null && station.groupWhereTheStationIs.Count > 0)
+        if (station.groupWhereTheStationIs != null /*&& station.groupWhereTheStationIs.Count > 0*/)
         {
             CommonProperties.energyOfStationGroups[station.groupWhereTheStationIs] -= consumeAmount;
         }

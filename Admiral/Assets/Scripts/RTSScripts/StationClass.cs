@@ -160,7 +160,7 @@ public class StationClass : MonoBehaviour
     public const float oneStepCloseStationsMaxDistance = 140f;
     private void Awake()
     {
-        groupWhereTheStationIs = new List<StationClass>();
+        //groupWhereTheStationIs = new List<StationClass>();
         //ConnectedStations = new List<StationClass>();
            shotIsMade = false;
         stationTransform = transform;
@@ -212,22 +212,20 @@ public class StationClass : MonoBehaviour
 
     public void disactivateThisStation(StationClass newStation)
     {
-        //CPU station
+        //player station. It clears the maternal station on ships or erassign the upgraded stations to them
         if (CPUNumber == 0)
         {
             for (int i = 0; i < CommonProperties.playerBattleShips.Count; i++)
                 if (CommonProperties.playerBattleShips[i].maternalStation == this) CommonProperties.playerBattleShips[i].maternalStation = newStation;
-            if (CommonProperties.stationPanelScript.station == this) CommonProperties.stationPanelScript.closeThePanel(true);
+            if (CommonProperties.stationPanelScript.station == this) CommonProperties.stationPanelScript.closeThePanel(true); //also closes the panel if it is open for destroyed of upgraded station
         }
-        //player station with CPUNumber 0
+        //CPU stations. does the same
         else
         {
             for (int i = 0; i < CommonProperties.CPUBattleShipsDictionary[CPUNumber - 1].Count; i++)
                 if (CommonProperties.CPUBattleShipsDictionary[CPUNumber - 1][i].maternalStation == this) CommonProperties.CPUBattleShipsDictionary[CPUNumber - 1][i].maternalStation = newStation;
         }
-        //sending the signal of cutting the connection with old station to other stations
-        foreach (StationClass stations in ConnectedStations) stations.ConnectedStations.Remove(this);
-        if (newStation != null) foreach (StationClass stations in ConnectedStations) stations.ConnectedStations.Add(newStation); // and adding new station to stations that were connected with previous station
+
 
         if (newStation == null)
         {
@@ -243,7 +241,7 @@ public class StationClass : MonoBehaviour
             ObjectPulled.SetActive(true);
             for (int i = 0; i < CommonProperties.CPUStations.Count; i++) CommonProperties.CPUStations[i].giveAnOrderToFleet();
             //reducing the energy of group of stations in case if this station is destroyed and if there left any group at all. So one station in group is not considered as group
-            if (groupWhereTheStationIs != null && groupWhereTheStationIs.Count > 0)
+            if (groupWhereTheStationIs != null /*&& groupWhereTheStationIs.Count > 0*/)
             {
                 if (groupWhereTheStationIs.Count > 2)
                 {
@@ -259,24 +257,19 @@ public class StationClass : MonoBehaviour
                     }
                 }
             }
-            
+
         }
-        else {
-            if (groupWhereTheStationIs != null && groupWhereTheStationIs.Count > 0)
-            {
-                for (int i = 0; i < CommonProperties.connectionLines[CPUNumber].Count; i++)
-                {
-                    if (CommonProperties.connectionLines[CPUNumber][i].stations.Contains(this))
-                    {
-                        CommonProperties.connectionLines[CPUNumber][i].reassignStationAfterUpgrade(this, newStation);
-                    }
-                }
-            }
-        }
+        //else
+        //{
+        //    if (groupWhereTheStationIs != null /*&& groupWhereTheStationIs.Count > 0*/)
+        //    {
+                
+        //    }
+        //}
         if (gunSphereVisible != null) gunSphereVisible.SetActive(false);
-        if (groupWhereTheStationIs != null && groupWhereTheStationIs.Count > 0)
+        if (groupWhereTheStationIs != null /*&& groupWhereTheStationIs.Count > 0*/)
         {
-            groupWhereTheStationIs.Remove(this);
+            //groupWhereTheStationIs.Remove(this);
             //deleting the group of stations if there left no any stations in group or there left one station only
             if (groupWhereTheStationIs.Count < 2)
             {

@@ -203,6 +203,7 @@ public class GameController : MonoBehaviour
         station.ShipsLimit = CommonProperties.Station0ShipsLimit;
         station.fillingLine.localPosition = new Vector3(0, 0, 0); //make full life to new station
         station.ConnectedStations.Clear();
+        station.groupWhereTheStationIs=null;
         ObjectPulled.transform.position = new Vector3 (86,0,0);
         station.stationTransform = ObjectPulled.transform;
         station.stationPosition = station.stationTransform.position;
@@ -254,6 +255,7 @@ public class GameController : MonoBehaviour
         stationCPU.ShipsLimit = CommonProperties.Station0ShipsLimit;
         stationCPU.fillingLine.localPosition = new Vector3(0, 0, 0); //make full life to new station
         stationCPU.ConnectedStations.Clear();
+        stationCPU.groupWhereTheStationIs = null;
         ObjectPulled.transform.position = new Vector3(0, 0, 50);
         stationCPU.stationTransform = ObjectPulled.transform;
         stationCPU.stationPosition = stationCPU.stationTransform.position;
@@ -306,6 +308,7 @@ public class GameController : MonoBehaviour
         stationCPU.fillingLine.localPosition = new Vector3(0, 0, 0); //make full life to new station
 
         stationCPU.ConnectedStations.Clear();
+        stationCPU.groupWhereTheStationIs = null;
         ObjectPulled.transform.position = new Vector3(0, 0, -50);
 
         stationCPU.stationTransform = ObjectPulled.transform;
@@ -360,6 +363,7 @@ public class GameController : MonoBehaviour
         stationCPU.fillingLine.localPosition = new Vector3(0, 0, 0); //make full life to new station
 
         stationCPU.ConnectedStations.Clear();
+        stationCPU.groupWhereTheStationIs = null;
         ObjectPulled.transform.position = new Vector3(-86, 0, 0);
 
         stationCPU.stationTransform = ObjectPulled.transform;
@@ -413,6 +417,7 @@ public class GameController : MonoBehaviour
         stationCPU.ShipsLimit = CommonProperties.Station0ShipsLimit;
         stationCPU.fillingLine.localPosition = new Vector3(0, 0, 0); //make full life to new station
         stationCPU.ConnectedStations.Clear();
+        stationCPU.groupWhereTheStationIs = null;
 
         ObjectPulled.transform.position = new Vector3(-86, 0, 100);
 

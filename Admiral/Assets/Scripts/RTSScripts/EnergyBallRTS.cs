@@ -31,7 +31,7 @@ public class EnergyBallRTS : MonoBehaviour
     }
     private void disactivateAndPassTheEnergy()
     {
-        if (station.groupWhereTheStationIs != null && station.groupWhereTheStationIs.Count > 0)
+        if (station.groupWhereTheStationIs != null /*&& station.groupWhereTheStationIs.Count > 0*/)
         {
             CommonProperties.energyOfStationGroups[station.groupWhereTheStationIs] += energyAmount; //adding the energy to group of station
             if (station.CPUNumber > 0) ConnectionCPUStations.distributeGroupEnergy(station.groupWhereTheStationIs);
@@ -45,7 +45,7 @@ public class EnergyBallRTS : MonoBehaviour
         {
             station.utilaizeTheEnergy(false);
         }
-        else if (station.groupWhereTheStationIs == null || station.groupWhereTheStationIs.Count == 0)
+        else if (station.groupWhereTheStationIs == null /*|| station.groupWhereTheStationIs.Count == 0*/)
         {
             station.utilaizeTheEnergy(false);
         }

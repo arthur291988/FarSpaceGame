@@ -565,7 +565,7 @@ public class CPUBattleShip : BattleShipClass
         if (maternalStation != null)
         {
             maternalStation.ShipsAssigned--;
-            if (maternalStation.groupWhereTheStationIs != null && maternalStation.groupWhereTheStationIs.Count > 0)
+            if (maternalStation.groupWhereTheStationIs != null /*&& maternalStation.groupWhereTheStationIs.Count > 0*/)
             {   
                 //sending the sygnal to maternal station to produce more ships but only to defence minimum
                 if (maternalStation.stationCurrentLevel == 0 && CommonProperties.energyOfStationGroups[maternalStation.groupWhereTheStationIs] > CommonProperties.D4ProdEnergy) maternalStation.utilaizeTheEnergyOfCPUGroup(1); 

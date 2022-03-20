@@ -260,7 +260,7 @@ public class StationPlayerRTS : StationClass
     private void checkIfStationCanShot() {
         if (closestEnegon != null)
         {
-            if (groupWhereTheStationIs != null && groupWhereTheStationIs.Count > 0)
+            if (groupWhereTheStationIs != null /*&& groupWhereTheStationIs.Count > 0*/)
             {
                 if (distanceToEnergon() < energonCatchDistance && !shotIsMade && CommonProperties.energyOfStationGroups[groupWhereTheStationIs] >= energyRequiredToShot && closestEnegon.isActiveAndEnabled)
                 {
@@ -321,7 +321,7 @@ public class StationPlayerRTS : StationClass
 
     public override void checkIfStationCanConnect()
     {
-        if (groupWhereTheStationIs != null && groupWhereTheStationIs.Count > 0)
+        if (groupWhereTheStationIs != null /*&& groupWhereTheStationIs.Count > 0*/)
         {
             if (CommonProperties.energyOfStationGroups[groupWhereTheStationIs] >= energyToConnection)
             {
@@ -370,7 +370,7 @@ public class StationPlayerRTS : StationClass
 
     private void energyIncrementAndCheckTheStationPanel()
     {
-        if (groupWhereTheStationIs!=null&& groupWhereTheStationIs.Count > 0) CommonProperties.energyOfStationGroups[groupWhereTheStationIs]++; 
+        if (groupWhereTheStationIs!=null/*&& groupWhereTheStationIs.Count > 0*/) CommonProperties.energyOfStationGroups[groupWhereTheStationIs]++; 
         else energyOfStation++;
         if (stationPanelIsActiveForThis)
         {
@@ -477,8 +477,9 @@ public class StationPlayerRTS : StationClass
         station.shotTimerTransformIndex = -6f / station.stationShotTime;
         station.ShipsAssigned = ShipsAssigned;
         station.fillingLine.localPosition = new Vector3(0, 0, 0); //make full life to new station
+        if (groupWhereTheStationIs != null/*&& groupWhereTheStationIs.Count>0*/) connectUpgradedStationToGroup(station);
+        else station.groupWhereTheStationIs = null;
         station.ConnectedStations.Clear();
-        if (groupWhereTheStationIs!=null&& groupWhereTheStationIs.Count>0) connectUpgradedStationToGroup(station);
         ObjectPulled.transform.position = stationPosition;
         station.stationTransform = ObjectPulled.transform;
         station.stationPosition = stationPosition;
@@ -492,13 +493,26 @@ public class StationPlayerRTS : StationClass
     }
 
     private void connectUpgradedStationToGroup(StationPlayerRTS station) {
+        //determmine the group processes for new and old station
         station.groupWhereTheStationIs = groupWhereTheStationIs;
+        groupWhereTheStationIs.Remove(this);
         station.groupWhereTheStationIs.Add(station);
-        //station.connectedStationsCount = connectedStationsCount;
-        foreach (StationClass stationConnected in ConnectedStations)
+        for (int i = 0; i < CommonProperties.connectionLines[CPUNumber].Count; i++)
         {
-            station.ConnectedStations.Add(stationConnected);
+            if (CommonProperties.connectionLines[CPUNumber][i].stations.Contains(this))
+            {
+                CommonProperties.connectionLines[CPUNumber][i].reassignStationAfterUpgrade(this, station);
+            }
         }
+
+
+        //deal with connections
+        //connect upgraded station with old station connections
+        foreach (StationClass stationsConnectedToOldStation in ConnectedStations) station.ConnectedStations.Add(stationsConnectedToOldStation);
+        //connect old station connections with upgraded station
+        foreach (StationClass stationsConnectedToOldStation in ConnectedStations) stationsConnectedToOldStation.ConnectedStations.Add(station);
+        //sending the signal of cutting the connection with old station to other stations
+        foreach (StationClass stationsConnectedToOldStation in ConnectedStations) stationsConnectedToOldStation.ConnectedStations.Remove(this);
     }
 
     public void upgradeTheGun(int gunLevel) {

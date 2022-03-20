@@ -49,7 +49,7 @@ public class StationAttackButton : MonoBehaviour
         }
         if (playerStations.Count > 0)
         {
-            shotStation.makeAShotFromStation(shotStation.groupWhereTheStationIs != null && shotStation.groupWhereTheStationIs.Count > 0);
+            shotStation.makeAShotFromStation(shotStation.groupWhereTheStationIs != null /*&& shotStation.groupWhereTheStationIs.Count > 0*/);
             shotStation.shotIsMade = true;
             shotStation.fillingLineRecharge.localPosition = new Vector3(-6f, 0, 0);
             playerStations.Remove(shotStation);

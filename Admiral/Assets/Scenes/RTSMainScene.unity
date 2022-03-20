@@ -16959,7 +16959,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1821250330}
   - component: {fileID: 1821250329}
-  - component: {fileID: 1821250328}
   - component: {fileID: 1821250331}
   - component: {fileID: 1821250332}
   - component: {fileID: 1821250333}
@@ -16972,14 +16971,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &1821250328
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1821250327}
-  m_Enabled: 1
 --- !u!20 &1821250329
 Camera:
   m_ObjectHideFlags: 0
@@ -18400,7 +18391,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2094376317}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 100, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 351869503}
@@ -18583,6 +18574,10 @@ MonoBehaviour:
   stationGunLevel: 0
   GunUpgradeCounts: 0
   energyToNextUpgradeOfGun: 0
+  energyToConnection: 0
+  energyOfStationToUPGradeGun: 0
+  energyOfStationToUPGradeStation: 0
+  energyOfStationToSetConnection: 0
   Cruis4: 0
   Cruis3: 0
   Cruis2: 0
@@ -18614,10 +18609,10 @@ MonoBehaviour:
   gunSphereParentTransform: {fileID: 0}
   energyGainEffect: {fileID: 0}
   territoryLine: {fileID: 0}
-  groupsWhereTheStationIs: []
+  groupWhereTheStationIs: []
   ConnectedStations: []
-  energyToConnection: 0
   colorOfStationMat: {r: 0, g: 0, b: 0, a: 0}
+  stationToConnect: {fileID: 0}
 --- !u!114 &2094376322
 MonoBehaviour:
   m_ObjectHideFlags: 0
