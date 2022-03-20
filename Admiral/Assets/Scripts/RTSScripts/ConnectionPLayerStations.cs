@@ -87,9 +87,9 @@ public class ConnectionPLayerStations : Singleton<ConnectionPLayerStations>
         energyTransporter.SetActive(true);
         lineScript.lineIsSet = true;
         setStationGroupForPlayer();
-        if (stationConnectionStartFrom.groupsWhereTheStationIs != null && stationConnectionStartFrom.groupsWhereTheStationIs.Count > 0)
+        if (stationConnectionStartFrom.groupWhereTheStationIs != null && stationConnectionStartFrom.groupWhereTheStationIs.Count > 0)
         {
-            CommonProperties.energyOfStationGroups[stationConnectionStartFrom.groupsWhereTheStationIs] -= stationConnectionStartFrom.energyToConnection;
+            CommonProperties.energyOfStationGroups[stationConnectionStartFrom.groupWhereTheStationIs] -= stationConnectionStartFrom.energyToConnection;
         }
         else stationConnectionStartFrom.energyOfStation -= stationConnectionStartFrom.energyToConnection;
         foreach (StationPlayerRTS stationPlayer in CommonProperties.playerStations) stationPlayer.checkIfStationCanConnect();
@@ -99,48 +99,54 @@ public class ConnectionPLayerStations : Singleton<ConnectionPLayerStations>
         //creating new connection group
         if (stationConnectionStartFrom.ConnectedStations.Count < 1 && stationToConnect.ConnectedStations.Count < 1) {
             List<List <StationClass>> newGroup = new List<List<StationClass>>();
-            List<StationClass> newConnection = new List<StationClass>();
-            CommonProperties.StationGroups.Add(stationToConnect.CPUNumber, newGroup);
+            List<StationClass> newConnection = new List<StationClass>(); 
+            if (CommonProperties.StationGroups.ContainsKey(stationConnectionStartFrom.CPUNumber)) CommonProperties.StationGroups[stationConnectionStartFrom.CPUNumber].Add(newConnection);
+            //so if there no station groups of this CPU it is first created
+            else
+            {
+                CommonProperties.StationGroups.Add(stationConnectionStartFrom.CPUNumber, newGroup);
+                newGroup.Add(newConnection);
+            }
             newGroup.Add(newConnection);
             newConnection.Add(stationConnectionStartFrom);
             stationConnectionStartFrom.ConnectedStations.Add(stationToConnect);
             //stationConnectionStartFrom.connectionsCount++;
-            stationConnectionStartFrom.groupsWhereTheStationIs = newConnection;
+            stationConnectionStartFrom.groupWhereTheStationIs = newConnection;
             newConnection.Add(stationToConnect);
             stationToConnect.ConnectedStations.Add(stationConnectionStartFrom);
-            stationToConnect.groupsWhereTheStationIs= newConnection;
+            stationToConnect.groupWhereTheStationIs= newConnection;
             CommonProperties.energyOfStationGroups.Add(newConnection,0);
             CommonProperties.energyOfStationGroups[newConnection] = stationToConnect.energyOfStation + stationConnectionStartFrom.energyOfStation;
         }
         //connecting one station to the connection group
         else if (stationConnectionStartFrom.ConnectedStations.Count < 1) {
-            stationConnectionStartFrom.groupsWhereTheStationIs = stationToConnect.groupsWhereTheStationIs;
-            stationToConnect.groupsWhereTheStationIs.Add(stationConnectionStartFrom);
+            stationConnectionStartFrom.groupWhereTheStationIs = stationToConnect.groupWhereTheStationIs;
+            stationToConnect.groupWhereTheStationIs.Add(stationConnectionStartFrom);
             stationToConnect.ConnectedStations.Add(stationConnectionStartFrom);
             stationConnectionStartFrom.ConnectedStations.Add(stationToConnect);
-            CommonProperties.energyOfStationGroups[stationToConnect.groupsWhereTheStationIs] += stationConnectionStartFrom.energyOfStation;
+            CommonProperties.energyOfStationGroups[stationToConnect.groupWhereTheStationIs] += stationConnectionStartFrom.energyOfStation;
         }
         //connecting one station to the connection group
         else if (stationToConnect.ConnectedStations.Count < 1) {
-            stationToConnect.groupsWhereTheStationIs = stationConnectionStartFrom.groupsWhereTheStationIs;
-            stationConnectionStartFrom.groupsWhereTheStationIs.Add(stationToConnect);
+            stationToConnect.groupWhereTheStationIs = stationConnectionStartFrom.groupWhereTheStationIs;
+            stationConnectionStartFrom.groupWhereTheStationIs.Add(stationToConnect);
             stationToConnect.ConnectedStations.Add(stationConnectionStartFrom);
             stationConnectionStartFrom.ConnectedStations.Add(stationToConnect);
-            CommonProperties.energyOfStationGroups[stationConnectionStartFrom.groupsWhereTheStationIs] += stationToConnect.energyOfStation;
+            CommonProperties.energyOfStationGroups[stationConnectionStartFrom.groupWhereTheStationIs] += stationToConnect.energyOfStation;
             //stationConnectionStartFrom.connectionsCount++;
             //stationToConnect.connectionsCount++;
         }
         //connecting one connection group to other connection group
         else if (stationConnectionStartFrom.ConnectedStations.Count> 0 && stationToConnect.ConnectedStations.Count > 0) {
 
-            if (stationConnectionStartFrom.groupsWhereTheStationIs != stationToConnect.groupsWhereTheStationIs)
+            if (stationConnectionStartFrom.groupWhereTheStationIs != stationToConnect.groupWhereTheStationIs)
             {
-                List<StationClass> tempClass = stationToConnect.groupsWhereTheStationIs;
+                List<StationClass> tempClass = stationToConnect.groupWhereTheStationIs;
                 foreach (StationClass station in tempClass)
                 {
-                    stationConnectionStartFrom.groupsWhereTheStationIs.Add(station);
-                    station.groupsWhereTheStationIs = stationConnectionStartFrom.groupsWhereTheStationIs;
-                    CommonProperties.energyOfStationGroups[stationConnectionStartFrom.groupsWhereTheStationIs] += station.energyOfStation;
+                    stationConnectionStartFrom.groupWhereTheStationIs.Add(station);
+                    station.groupWhereTheStationIs = stationConnectionStartFrom.groupWhereTheStationIs;
+                    CommonProperties.energyOfStationGroups[stationConnectionStartFrom.groupWhereTheStationIs] += station.energyOfStation;
                 }
                 stationToConnect.ConnectedStations.Add(stationConnectionStartFrom);
                 stationConnectionStartFrom.ConnectedStations.Add(stationToConnect);
@@ -222,7 +228,7 @@ public class ConnectionPLayerStations : Singleton<ConnectionPLayerStations>
                 {
                     //140 is one step colse station distance
                     if (CommonProperties.playerStations[i] != stationConnectionStartFrom && (CommonProperties.playerStations[i].stationPosition- stationConnectionStartFrom.stationPosition).magnitude<140 
-                        && (stationConnectionStartFrom.groupsWhereTheStationIs == null || (stationConnectionStartFrom.groupsWhereTheStationIs!=null && !stationConnectionStartFrom.groupsWhereTheStationIs.Contains(CommonProperties.playerStations[i]))))
+                        && (stationConnectionStartFrom.groupWhereTheStationIs == null || (stationConnectionStartFrom.groupWhereTheStationIs!=null && !stationConnectionStartFrom.groupWhereTheStationIs.Contains(CommonProperties.playerStations[i]))))
                     {
                         screenPos = selectCamera.WorldToScreenPoint(CommonProperties.playerStations[i].stationPosition);
 

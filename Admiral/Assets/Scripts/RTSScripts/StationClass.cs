@@ -149,7 +149,7 @@ public class StationClass : MonoBehaviour
     //public Dictionary<Vector3, StationClass> connectionsToStations;
     //[HideInInspector]
     //public byte connectionsCount;
-    public List<StationClass> groupsWhereTheStationIs;
+    public List<StationClass> groupWhereTheStationIs;
     public List<StationClass> ConnectedStations;
 
     [HideInInspector]
@@ -160,7 +160,7 @@ public class StationClass : MonoBehaviour
     public const float oneStepCloseStationsMaxDistance = 140f;
     private void Awake()
     {
-        groupsWhereTheStationIs = new List<StationClass>();
+        groupWhereTheStationIs = new List<StationClass>();
         //ConnectedStations = new List<StationClass>();
            shotIsMade = false;
         stationTransform = transform;
@@ -242,12 +242,15 @@ public class StationClass : MonoBehaviour
             ObjectPulled.transform.position = stationPosition;
             ObjectPulled.SetActive(true);
             for (int i = 0; i < CommonProperties.CPUStations.Count; i++) CommonProperties.CPUStations[i].giveAnOrderToFleet();
-            //reducing the energy of group of stations in case if this station is destroyed
-            if (groupsWhereTheStationIs != null && groupsWhereTheStationIs.Count > 0)
+            //reducing the energy of group of stations in case if this station is destroyed and if there left any group at all. So one station in group is not considered as group
+            if (groupWhereTheStationIs != null && groupWhereTheStationIs.Count > 0)
             {
-                CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] -= CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] / groupsWhereTheStationIs.Count;
-                //updating the panel info if it is opened by player
-                if (CPUNumber == 0 && CommonProperties.stationPanelIsActive) CommonProperties.stationPanelScript.updateVariablesAfterEnergyChanges(); 
+                if (groupWhereTheStationIs.Count > 2)
+                {
+                    CommonProperties.energyOfStationGroups[groupWhereTheStationIs] -= CommonProperties.energyOfStationGroups[groupWhereTheStationIs] / groupWhereTheStationIs.Count;
+                    //updating the panel info if it is opened by player
+                    if (CPUNumber == 0 && CommonProperties.stationPanelIsActive) CommonProperties.stationPanelScript.updateVariablesAfterEnergyChanges();
+                }
                 for (int i = 0; i < CommonProperties.connectionLines[CPUNumber].Count; i++)
                 {
                     if (CommonProperties.connectionLines[CPUNumber][i].stations.Contains(this))
@@ -259,7 +262,7 @@ public class StationClass : MonoBehaviour
             
         }
         else {
-            if (groupsWhereTheStationIs != null && groupsWhereTheStationIs.Count > 0)
+            if (groupWhereTheStationIs != null && groupWhereTheStationIs.Count > 0)
             {
                 for (int i = 0; i < CommonProperties.connectionLines[CPUNumber].Count; i++)
                 {
@@ -271,16 +274,17 @@ public class StationClass : MonoBehaviour
             }
         }
         if (gunSphereVisible != null) gunSphereVisible.SetActive(false);
-        if (groupsWhereTheStationIs != null && groupsWhereTheStationIs.Count > 0)
+        if (groupWhereTheStationIs != null && groupWhereTheStationIs.Count > 0)
         {
-            groupsWhereTheStationIs.Remove(this);
-            //deleting the group of stations if there left no any stations in group
-            if (groupsWhereTheStationIs.Count < 1)
+            groupWhereTheStationIs.Remove(this);
+            //deleting the group of stations if there left no any stations in group or there left one station only
+            if (groupWhereTheStationIs.Count < 2)
             {
-                CommonProperties.StationGroups[CPUNumber].Remove(groupsWhereTheStationIs);
-                CommonProperties.energyOfStationGroups.Remove(groupsWhereTheStationIs);
+                CommonProperties.StationGroups[CPUNumber].Remove(groupWhereTheStationIs);
+                CommonProperties.energyOfStationGroups.Remove(groupWhereTheStationIs);
+                if (groupWhereTheStationIs.Count==1) groupWhereTheStationIs[0].groupWhereTheStationIs = null;
             }
-            groupsWhereTheStationIs = null;
+            groupWhereTheStationIs = null;
         }
         ConnectedStations.Clear();
         gameObject.SetActive(false);

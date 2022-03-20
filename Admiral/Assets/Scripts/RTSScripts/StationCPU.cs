@@ -147,11 +147,11 @@ public class StationCPU : StationClass
     {
         yield return new WaitForSeconds(Random.Range(0, 1f));
         if (distanceToEnergon() < energonCatchDistance) {
-            if (groupsWhereTheStationIs != null & groupsWhereTheStationIs.Count > 0)
+            if (groupWhereTheStationIs != null && groupWhereTheStationIs.Count > 0)
             {
-                if (CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] >= energyRequiredToShot)
+                if (CommonProperties.energyOfStationGroups[groupWhereTheStationIs] >= energyRequiredToShot)
                 {
-                    CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] -= energyRequiredToShot;
+                    CommonProperties.energyOfStationGroups[groupWhereTheStationIs] -= energyRequiredToShot;
                     ObjectPulledList = ObjectPullerRTS.current.GetStationBulletPull();
                     ObjectPulled = ObjectPullerRTS.current.GetGameObjectFromPull(ObjectPulledList);
                     stationBullet = ObjectPulled;
@@ -492,12 +492,12 @@ public class StationCPU : StationClass
     {
         if (useOfEnergy == 3)
         {
-            CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] -= energyToNextUpgradeOfStation;
+            CommonProperties.energyOfStationGroups[groupWhereTheStationIs] -= energyToNextUpgradeOfStation;
             upgradeStation(stationCurrentLevel + 1);
         }
         if (useOfEnergy == 4)
         {
-            CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] -= energyToNextUpgradeOfGun;
+            CommonProperties.energyOfStationGroups[groupWhereTheStationIs] -= energyToNextUpgradeOfGun;
             upgradeTheGun(stationGunLevel + 1);
         }
 
@@ -505,23 +505,23 @@ public class StationCPU : StationClass
         {
             if (ShipsAssigned < BASE_STATION_DEFENCE_SHIPS_COUNT)
             {
-                if (CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] > 0)
+                if (CommonProperties.energyOfStationGroups[groupWhereTheStationIs] > 0)
                 {
                     if (stationCurrentLevel == 0)
                     {
                         if (Random.Range(0, 2) > 0)
                         {
-                            if (CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] > CommonProperties.C4ProdEnergy)
+                            if (CommonProperties.energyOfStationGroups[groupWhereTheStationIs] > CommonProperties.C4ProdEnergy)
                             {
-                                CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] -= CommonProperties.C4ProdEnergy;
+                                CommonProperties.energyOfStationGroups[groupWhereTheStationIs] -= CommonProperties.C4ProdEnergy;
                                 launcheNewShip(true, 4);
                                 //Cruis4++;
                                 ShipsAssigned++;
 
                             }
-                            else if (CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] > CommonProperties.D4ProdEnergy)
+                            else if (CommonProperties.energyOfStationGroups[groupWhereTheStationIs] > CommonProperties.D4ProdEnergy)
                             {
-                                CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] -= CommonProperties.D4ProdEnergy;
+                                CommonProperties.energyOfStationGroups[groupWhereTheStationIs] -= CommonProperties.D4ProdEnergy;
                                 launcheNewShip(false, 4);
                                 //Destr4++;
                                 ShipsAssigned++;
@@ -531,9 +531,9 @@ public class StationCPU : StationClass
 
                         else
                         {
-                            if (CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] > CommonProperties.D4ProdEnergy)
+                            if (CommonProperties.energyOfStationGroups[groupWhereTheStationIs] > CommonProperties.D4ProdEnergy)
                             {
-                                CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] -= CommonProperties.D4ProdEnergy;
+                                CommonProperties.energyOfStationGroups[groupWhereTheStationIs] -= CommonProperties.D4ProdEnergy;
                                 launcheNewShip(false, 4);
                                 //Destr4++;
                                 ShipsAssigned++;
@@ -541,7 +541,7 @@ public class StationCPU : StationClass
                             }
                         }
 
-                        if (CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] > CommonProperties.D4ProdEnergy && ShipsAssigned < BASE_STATION_DEFENCE_SHIPS_COUNT) utilaizeTheEnergyOfCPUGroup(1);
+                        if (CommonProperties.energyOfStationGroups[groupWhereTheStationIs] > CommonProperties.D4ProdEnergy && ShipsAssigned < BASE_STATION_DEFENCE_SHIPS_COUNT) utilaizeTheEnergyOfCPUGroup(1);
                         else
                         {
                             allignTheShipsAroundStation(); //put ships around station after the last energy unit is utilized
@@ -551,16 +551,16 @@ public class StationCPU : StationClass
                     {
                         if (Random.Range(0, 2) > 0)
                         {
-                            if (CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] > CommonProperties.C3ProdEnergy)
+                            if (CommonProperties.energyOfStationGroups[groupWhereTheStationIs] > CommonProperties.C3ProdEnergy)
                             {
-                                CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] -= CommonProperties.C3ProdEnergy;
+                                CommonProperties.energyOfStationGroups[groupWhereTheStationIs] -= CommonProperties.C3ProdEnergy;
                                 launcheNewShip(true, 3);
                                 //Cruis3++;
                                 ShipsAssigned++;
                             }
-                            else if (CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] > CommonProperties.D3ProdEnergy)
+                            else if (CommonProperties.energyOfStationGroups[groupWhereTheStationIs] > CommonProperties.D3ProdEnergy)
                             {
-                                CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] -= CommonProperties.D3ProdEnergy;
+                                CommonProperties.energyOfStationGroups[groupWhereTheStationIs] -= CommonProperties.D3ProdEnergy;
                                 launcheNewShip(false, 3);
                                 //Destr3++;
                                 ShipsAssigned++;
@@ -568,16 +568,16 @@ public class StationCPU : StationClass
                         }
                         else
                         {
-                            if (CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] > CommonProperties.D3ProdEnergy)
+                            if (CommonProperties.energyOfStationGroups[groupWhereTheStationIs] > CommonProperties.D3ProdEnergy)
                             {
-                                CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] -= CommonProperties.D3ProdEnergy;
+                                CommonProperties.energyOfStationGroups[groupWhereTheStationIs] -= CommonProperties.D3ProdEnergy;
                                 launcheNewShip(false, 3);
                                 //Destr3++;
                                 ShipsAssigned++;
                             }
                         }
 
-                        if (CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] > CommonProperties.D3ProdEnergy && ShipsAssigned < BASE_STATION_DEFENCE_SHIPS_COUNT) utilaizeTheEnergyOfCPUGroup(1);
+                        if (CommonProperties.energyOfStationGroups[groupWhereTheStationIs] > CommonProperties.D3ProdEnergy && ShipsAssigned < BASE_STATION_DEFENCE_SHIPS_COUNT) utilaizeTheEnergyOfCPUGroup(1);
                         else
                         {
                             allignTheShipsAroundStation(); //put ships around station after the last energy unit is utilized
@@ -587,9 +587,9 @@ public class StationCPU : StationClass
                     {
                         if (Random.Range(0, 2) > 0)
                         {
-                            if (CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] > CommonProperties.C2ProdEnergy)
+                            if (CommonProperties.energyOfStationGroups[groupWhereTheStationIs] > CommonProperties.C2ProdEnergy)
                             {
-                                CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] -= CommonProperties.C2ProdEnergy;
+                                CommonProperties.energyOfStationGroups[groupWhereTheStationIs] -= CommonProperties.C2ProdEnergy;
                                 launcheNewShip(true, 2);
                                 //Cruis2++;
                                 ShipsAssigned++;
@@ -598,32 +598,32 @@ public class StationCPU : StationClass
                             {
                                 if (UnityEngine.Random.Range(0, 2) > 0)
                                 {
-                                    CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] -= CommonProperties.D2ProdEnergy;
+                                    CommonProperties.energyOfStationGroups[groupWhereTheStationIs] -= CommonProperties.D2ProdEnergy;
                                     launcheNewShip(false, 2);
                                     //Destr2++;
                                     ShipsAssigned++;
                                 }
                                 else
                                 {
-                                    CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] -= CommonProperties.D2PProdEnergy;
+                                    CommonProperties.energyOfStationGroups[groupWhereTheStationIs] -= CommonProperties.D2PProdEnergy;
                                     launcheNewShip(false, 22);
                                     //Destr2Par++;
                                     ShipsAssigned++;
                                 }
                             }
                         }
-                        else if (CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] > CommonProperties.D2ProdEnergy)
+                        else if (CommonProperties.energyOfStationGroups[groupWhereTheStationIs] > CommonProperties.D2ProdEnergy)
                         {
                             if (UnityEngine.Random.Range(0, 2) > 0)
                             {
-                                CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] -= CommonProperties.D2ProdEnergy;
+                                CommonProperties.energyOfStationGroups[groupWhereTheStationIs] -= CommonProperties.D2ProdEnergy;
                                 launcheNewShip(false, 2);
                                 //Destr2++;
                                 ShipsAssigned++;
                             }
                             else
                             {
-                                CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] -= CommonProperties.D2PProdEnergy;
+                                CommonProperties.energyOfStationGroups[groupWhereTheStationIs] -= CommonProperties.D2PProdEnergy;
                                 launcheNewShip(false, 22);
                                 //Destr2Par++;
                                 ShipsAssigned++;
@@ -631,7 +631,7 @@ public class StationCPU : StationClass
 
                         }
 
-                        if (CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] > CommonProperties.D2ProdEnergy && ShipsAssigned < BASE_STATION_DEFENCE_SHIPS_COUNT) utilaizeTheEnergyOfCPUGroup(1);
+                        if (CommonProperties.energyOfStationGroups[groupWhereTheStationIs] > CommonProperties.D2ProdEnergy && ShipsAssigned < BASE_STATION_DEFENCE_SHIPS_COUNT) utilaizeTheEnergyOfCPUGroup(1);
                         else
                         {
                             allignTheShipsAroundStation(); //put ships around station after the last energy unit is utilized
@@ -642,9 +642,9 @@ public class StationCPU : StationClass
                     {
                         if (UnityEngine.Random.Range(0, 2) > 0)
                         {
-                            if (CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] > CommonProperties.C1ProdEnergy)
+                            if (CommonProperties.energyOfStationGroups[groupWhereTheStationIs] > CommonProperties.C1ProdEnergy)
                             {
-                                CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] -= CommonProperties.C1ProdEnergy;
+                                CommonProperties.energyOfStationGroups[groupWhereTheStationIs] -= CommonProperties.C1ProdEnergy;
                                 launcheNewShip(true, 1);
                                 //Cruis1++;
                                 ShipsAssigned++;
@@ -653,14 +653,14 @@ public class StationCPU : StationClass
                             {
                                 if (UnityEngine.Random.Range(0, 2) > 0)
                                 {
-                                    CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] -= CommonProperties.D1ProdEnergy;
+                                    CommonProperties.energyOfStationGroups[groupWhereTheStationIs] -= CommonProperties.D1ProdEnergy;
                                     launcheNewShip(false, 1);
                                     //Destr1++;
                                     ShipsAssigned++;
                                 }
                                 else
                                 {
-                                    CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] -= CommonProperties.D1PProdEnergy;
+                                    CommonProperties.energyOfStationGroups[groupWhereTheStationIs] -= CommonProperties.D1PProdEnergy;
                                     launcheNewShip(false, 11);
                                     //Destr1Par++;
                                     ShipsAssigned++;
@@ -668,25 +668,25 @@ public class StationCPU : StationClass
                             }
                         }
 
-                        else if (CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] > CommonProperties.D1ProdEnergy)
+                        else if (CommonProperties.energyOfStationGroups[groupWhereTheStationIs] > CommonProperties.D1ProdEnergy)
                         {
                             if (UnityEngine.Random.Range(0, 2) > 0)
                             {
-                                CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] -= CommonProperties.D1ProdEnergy;
+                                CommonProperties.energyOfStationGroups[groupWhereTheStationIs] -= CommonProperties.D1ProdEnergy;
                                 launcheNewShip(false, 1);
                                 //Destr1++;
                                 ShipsAssigned++;
                             }
                             else
                             {
-                                CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] -= CommonProperties.D1PProdEnergy;
+                                CommonProperties.energyOfStationGroups[groupWhereTheStationIs] -= CommonProperties.D1PProdEnergy;
                                 launcheNewShip(false, 11);
                                 //Destr1Par++;
                                 ShipsAssigned++;
                             }
                         }
 
-                        if (CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] > CommonProperties.D1ProdEnergy && ShipsAssigned < BASE_STATION_DEFENCE_SHIPS_COUNT) utilaizeTheEnergyOfCPUGroup(1);
+                        if (CommonProperties.energyOfStationGroups[groupWhereTheStationIs] > CommonProperties.D1ProdEnergy && ShipsAssigned < BASE_STATION_DEFENCE_SHIPS_COUNT) utilaizeTheEnergyOfCPUGroup(1);
                         else
                         {
                             allignTheShipsAroundStation(); //put ships around station after the last energy unit is utilized
@@ -697,25 +697,25 @@ public class StationCPU : StationClass
         }
         if (useOfEnergy == 2)
         {
-            if (ShipsAssigned < BASE_STATION_DEFENCE_SHIPS_COUNT)
+            if (ShipsAssigned < ShipsLimit)
             {
-                if (CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] > 0)
+                if (CommonProperties.energyOfStationGroups[groupWhereTheStationIs] > 0)
                 {
                     if (stationCurrentLevel == 0)
                     {
                         if (Random.Range(0, 2) > 0)
                         {
-                            if (CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] > CommonProperties.C4ProdEnergy)
+                            if (CommonProperties.energyOfStationGroups[groupWhereTheStationIs] > CommonProperties.C4ProdEnergy)
                             {
-                                CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] -= CommonProperties.C4ProdEnergy;
+                                CommonProperties.energyOfStationGroups[groupWhereTheStationIs] -= CommonProperties.C4ProdEnergy;
                                 launcheNewShip(true, 4);
                                 //Cruis4++;
                                 ShipsAssigned++;
 
                             }
-                            else if (CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] > CommonProperties.D4ProdEnergy)
+                            else if (CommonProperties.energyOfStationGroups[groupWhereTheStationIs] > CommonProperties.D4ProdEnergy)
                             {
-                                CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] -= CommonProperties.D4ProdEnergy;
+                                CommonProperties.energyOfStationGroups[groupWhereTheStationIs] -= CommonProperties.D4ProdEnergy;
                                 launcheNewShip(false, 4);
                                 //Destr4++;
                                 ShipsAssigned++;
@@ -725,9 +725,9 @@ public class StationCPU : StationClass
 
                         else
                         {
-                            if (CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] > CommonProperties.D4ProdEnergy)
+                            if (CommonProperties.energyOfStationGroups[groupWhereTheStationIs] > CommonProperties.D4ProdEnergy)
                             {
-                                CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] -= CommonProperties.D4ProdEnergy;
+                                CommonProperties.energyOfStationGroups[groupWhereTheStationIs] -= CommonProperties.D4ProdEnergy;
                                 launcheNewShip(false, 4);
                                 //Destr4++;
                                 ShipsAssigned++;
@@ -735,26 +735,27 @@ public class StationCPU : StationClass
                             }
                         }
 
-                        if (CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] > CommonProperties.D4ProdEnergy && ShipsLimit > ShipsAssigned) utilaizeTheEnergyOfCPUGroup(2);
+                        if (CommonProperties.energyOfStationGroups[groupWhereTheStationIs] > CommonProperties.D4ProdEnergy && ShipsLimit > ShipsAssigned) utilaizeTheEnergyOfCPUGroup(2);
                         else
                         {
                             allignTheShipsAroundStation(); //put ships around station after the last energy unit is utilized
+                            giveAnOrderToFleet();
                         }
                     }
                     else if (stationCurrentLevel == 1)
                     {
                         if (Random.Range(0, 2) > 0)
                         {
-                            if (CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] > CommonProperties.C3ProdEnergy)
+                            if (CommonProperties.energyOfStationGroups[groupWhereTheStationIs] > CommonProperties.C3ProdEnergy)
                             {
-                                CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] -= CommonProperties.C3ProdEnergy;
+                                CommonProperties.energyOfStationGroups[groupWhereTheStationIs] -= CommonProperties.C3ProdEnergy;
                                 launcheNewShip(true, 3);
                                 //Cruis3++;
                                 ShipsAssigned++;
                             }
-                            else if (CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] > CommonProperties.D3ProdEnergy)
+                            else if (CommonProperties.energyOfStationGroups[groupWhereTheStationIs] > CommonProperties.D3ProdEnergy)
                             {
-                                CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] -= CommonProperties.D3ProdEnergy;
+                                CommonProperties.energyOfStationGroups[groupWhereTheStationIs] -= CommonProperties.D3ProdEnergy;
                                 launcheNewShip(false, 3);
                                 //Destr3++;
                                 ShipsAssigned++;
@@ -762,28 +763,29 @@ public class StationCPU : StationClass
                         }
                         else
                         {
-                            if (CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] > CommonProperties.D3ProdEnergy)
+                            if (CommonProperties.energyOfStationGroups[groupWhereTheStationIs] > CommonProperties.D3ProdEnergy)
                             {
-                                CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] -= CommonProperties.D3ProdEnergy;
+                                CommonProperties.energyOfStationGroups[groupWhereTheStationIs] -= CommonProperties.D3ProdEnergy;
                                 launcheNewShip(false, 3);
                                 //Destr3++;
                                 ShipsAssigned++;
                             }
                         }
 
-                        if (CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] > CommonProperties.D3ProdEnergy && ShipsLimit > ShipsAssigned) utilaizeTheEnergyOfCPUGroup(2);
+                        if (CommonProperties.energyOfStationGroups[groupWhereTheStationIs] > CommonProperties.D3ProdEnergy && ShipsLimit > ShipsAssigned) utilaizeTheEnergyOfCPUGroup(2);
                         else
                         {
                             allignTheShipsAroundStation(); //put ships around station after the last energy unit is utilized
+                            giveAnOrderToFleet();
                         }
                     }
                     else if (stationCurrentLevel == 2)
                     {
                         if (Random.Range(0, 2) > 0)
                         {
-                            if (CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] > CommonProperties.C2ProdEnergy)
+                            if (CommonProperties.energyOfStationGroups[groupWhereTheStationIs] > CommonProperties.C2ProdEnergy)
                             {
-                                CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] -= CommonProperties.C2ProdEnergy;
+                                CommonProperties.energyOfStationGroups[groupWhereTheStationIs] -= CommonProperties.C2ProdEnergy;
                                 launcheNewShip(true, 2);
                                 //Cruis2++;
                                 ShipsAssigned++;
@@ -792,32 +794,32 @@ public class StationCPU : StationClass
                             {
                                 if (UnityEngine.Random.Range(0, 2) > 0)
                                 {
-                                    CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] -= CommonProperties.D2ProdEnergy;
+                                    CommonProperties.energyOfStationGroups[groupWhereTheStationIs] -= CommonProperties.D2ProdEnergy;
                                     launcheNewShip(false, 2);
                                     //Destr2++;
                                     ShipsAssigned++;
                                 }
                                 else
                                 {
-                                    CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] -= CommonProperties.D2PProdEnergy;
+                                    CommonProperties.energyOfStationGroups[groupWhereTheStationIs] -= CommonProperties.D2PProdEnergy;
                                     launcheNewShip(false, 22);
                                     //Destr2Par++;
                                     ShipsAssigned++;
                                 }
                             }
                         }
-                        else if (CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] > CommonProperties.D2ProdEnergy)
+                        else if (CommonProperties.energyOfStationGroups[groupWhereTheStationIs] > CommonProperties.D2ProdEnergy)
                         {
                             if (UnityEngine.Random.Range(0, 2) > 0)
                             {
-                                CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] -= CommonProperties.D2ProdEnergy;
+                                CommonProperties.energyOfStationGroups[groupWhereTheStationIs] -= CommonProperties.D2ProdEnergy;
                                 launcheNewShip(false, 2);
                                 //Destr2++;
                                 ShipsAssigned++;
                             }
                             else
                             {
-                                CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] -= CommonProperties.D2PProdEnergy;
+                                CommonProperties.energyOfStationGroups[groupWhereTheStationIs] -= CommonProperties.D2PProdEnergy;
                                 launcheNewShip(false, 22);
                                 //Destr2Par++;
                                 ShipsAssigned++;
@@ -825,10 +827,11 @@ public class StationCPU : StationClass
 
                         }
 
-                        if (CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] > CommonProperties.D2ProdEnergy && ShipsLimit > ShipsAssigned) utilaizeTheEnergyOfCPUGroup(2);
+                        if (CommonProperties.energyOfStationGroups[groupWhereTheStationIs] > CommonProperties.D2ProdEnergy && ShipsLimit > ShipsAssigned) utilaizeTheEnergyOfCPUGroup(2);
                         else
                         {
                             allignTheShipsAroundStation(); //put ships around station after the last energy unit is utilized
+                            giveAnOrderToFleet();
                         }
                     }
 
@@ -836,9 +839,9 @@ public class StationCPU : StationClass
                     {
                         if (UnityEngine.Random.Range(0, 2) > 0)
                         {
-                            if (CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] > CommonProperties.C1ProdEnergy)
+                            if (CommonProperties.energyOfStationGroups[groupWhereTheStationIs] > CommonProperties.C1ProdEnergy)
                             {
-                                CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] -= CommonProperties.C1ProdEnergy;
+                                CommonProperties.energyOfStationGroups[groupWhereTheStationIs] -= CommonProperties.C1ProdEnergy;
                                 launcheNewShip(true, 1);
                                 //Cruis1++;
                                 ShipsAssigned++;
@@ -847,14 +850,14 @@ public class StationCPU : StationClass
                             {
                                 if (UnityEngine.Random.Range(0, 2) > 0)
                                 {
-                                    CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] -= CommonProperties.D1ProdEnergy;
+                                    CommonProperties.energyOfStationGroups[groupWhereTheStationIs] -= CommonProperties.D1ProdEnergy;
                                     launcheNewShip(false, 1);
                                     //Destr1++;
                                     ShipsAssigned++;
                                 }
                                 else
                                 {
-                                    CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] -= CommonProperties.D1PProdEnergy;
+                                    CommonProperties.energyOfStationGroups[groupWhereTheStationIs] -= CommonProperties.D1PProdEnergy;
                                     launcheNewShip(false, 11);
                                     //Destr1Par++;
                                     ShipsAssigned++;
@@ -862,25 +865,25 @@ public class StationCPU : StationClass
                             }
                         }
 
-                        else if (CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] > CommonProperties.D1ProdEnergy)
+                        else if (CommonProperties.energyOfStationGroups[groupWhereTheStationIs] > CommonProperties.D1ProdEnergy)
                         {
                             if (UnityEngine.Random.Range(0, 2) > 0)
                             {
-                                CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] -= CommonProperties.D1ProdEnergy;
+                                CommonProperties.energyOfStationGroups[groupWhereTheStationIs] -= CommonProperties.D1ProdEnergy;
                                 launcheNewShip(false, 1);
                                 //Destr1++;
                                 ShipsAssigned++;
                             }
                             else
                             {
-                                CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] -= CommonProperties.D1PProdEnergy;
+                                CommonProperties.energyOfStationGroups[groupWhereTheStationIs] -= CommonProperties.D1PProdEnergy;
                                 launcheNewShip(false, 11);
                                 //Destr1Par++;
                                 ShipsAssigned++;
                             }
                         }
 
-                        if (CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] > CommonProperties.D1ProdEnergy && ShipsLimit > ShipsAssigned) utilaizeTheEnergyOfCPUGroup(2);
+                        if (CommonProperties.energyOfStationGroups[groupWhereTheStationIs] > CommonProperties.D1ProdEnergy && ShipsLimit > ShipsAssigned) utilaizeTheEnergyOfCPUGroup(2);
                         else
                         {
                             allignTheShipsAroundStation(); //put ships around station after the last energy unit is utilized
@@ -978,8 +981,9 @@ public class StationCPU : StationClass
         station.stationShotTimer = station.stationShotTime;
         station.shotTimerTransformIndex = -6f / station.stationShotTime;
         station.ShipsAssigned = ShipsAssigned;
+        station.ConnectedStations.Clear();
         station.fillingLine.localPosition = new Vector3(0, 0, 0); //make full life to new station
-        if (groupsWhereTheStationIs != null && groupsWhereTheStationIs.Count > 0) connectUpgradedStationToGroup(station);
+        if (groupWhereTheStationIs != null && groupWhereTheStationIs.Count > 0) connectUpgradedStationToGroup(station);
         ObjectPulled.transform.position = stationPosition;
         station.stationTransform = ObjectPulled.transform;
         station.stationPosition = stationPosition;
@@ -991,7 +995,7 @@ public class StationCPU : StationClass
         energyOfStationToUPGradeStation = 0;
         energyOfStationToSetConnection = 0;
         disactivateThisStation(station);
-        if (station.groupsWhereTheStationIs == null || station.groupsWhereTheStationIs.Count == 0) station.utilaizeTheEnergy(true); //using the energy of station to produce new ships. Used only by stand alone station
+        if (station.groupWhereTheStationIs == null || station.groupWhereTheStationIs.Count == 0) station.utilaizeTheEnergy(true); //using the energy of station to produce new ships. Used only by stand alone station
     }
     //public override void disactivateThisStation(StationClass newStation)
     //{
@@ -1001,8 +1005,8 @@ public class StationCPU : StationClass
     //}
     private void connectUpgradedStationToGroup(StationCPU station)
     {
-        station.groupsWhereTheStationIs = groupsWhereTheStationIs;
-        station.groupsWhereTheStationIs.Add(station);
+        station.groupWhereTheStationIs = groupWhereTheStationIs;
+        station.groupWhereTheStationIs.Add(station);
         //station.connectedStationsCount = connectedStationsCount;
         foreach (StationClass stationConnected in ConnectedStations)
         {
@@ -1012,14 +1016,14 @@ public class StationCPU : StationClass
 
     public override void checkIfStationCanConnect()
     {
-        if (groupsWhereTheStationIs != null && groupsWhereTheStationIs.Count > 0)
+        if (groupWhereTheStationIs != null && groupWhereTheStationIs.Count > 0)
         {
-            //if (CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] >= energyToConnection)
+            //if (CommonProperties.energyOfStationGroups[groupWhereTheStationIs] >= energyToConnection)
             //{
                 for (int i = 0; i < CommonProperties.CPUStationsDictionary[CPUNumber - 1].Count; i++)
                 {
                     if (CommonProperties.CPUStationsDictionary[CPUNumber - 1][i] != this && (CommonProperties.CPUStationsDictionary[CPUNumber - 1][i].stationPosition - stationPosition).magnitude < oneStepCloseStationsMaxDistance
-                        && !groupsWhereTheStationIs.Contains(CommonProperties.CPUStationsDictionary[CPUNumber - 1][i]))
+                        && !groupWhereTheStationIs.Contains(CommonProperties.CPUStationsDictionary[CPUNumber - 1][i]))
                     {
                         stationToConnect = CommonProperties.CPUStationsDictionary[CPUNumber - 1][i];
                         return;

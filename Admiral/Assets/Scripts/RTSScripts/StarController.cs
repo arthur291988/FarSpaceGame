@@ -167,6 +167,7 @@ public class StarController : MonoBehaviour
         station.ShipsLimit = CommonProperties.Station0ShipsLimit;
         station.fillingLine.localPosition = new Vector3(0, 0, 0); //make full life to new station
 
+        station.ConnectedStations.Clear();
         ObjectPulled.transform.position = starPosition;
 
         station.stationTransform = ObjectPulled.transform;

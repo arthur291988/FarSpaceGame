@@ -565,13 +565,13 @@ public class CPUBattleShip : BattleShipClass
         if (maternalStation != null)
         {
             maternalStation.ShipsAssigned--;
-            if (maternalStation.groupsWhereTheStationIs != null & maternalStation.groupsWhereTheStationIs.Count > 0)
+            if (maternalStation.groupWhereTheStationIs != null && maternalStation.groupWhereTheStationIs.Count > 0)
             {   
                 //sending the sygnal to maternal station to produce more ships but only to defence minimum
-                if (maternalStation.stationCurrentLevel == 0 && CommonProperties.energyOfStationGroups[maternalStation.groupsWhereTheStationIs] > CommonProperties.D4ProdEnergy) maternalStation.utilaizeTheEnergyOfCPUGroup(1); 
-                else if (maternalStation.stationCurrentLevel == 1 && CommonProperties.energyOfStationGroups[maternalStation.groupsWhereTheStationIs] > CommonProperties.D3ProdEnergy) maternalStation.utilaizeTheEnergyOfCPUGroup(1); 
-                else if (maternalStation.stationCurrentLevel == 1 && CommonProperties.energyOfStationGroups[maternalStation.groupsWhereTheStationIs] > CommonProperties.D2ProdEnergy) maternalStation.utilaizeTheEnergyOfCPUGroup(1); 
-                else if (maternalStation.stationCurrentLevel == 1 && CommonProperties.energyOfStationGroups[maternalStation.groupsWhereTheStationIs] > CommonProperties.D1ProdEnergy) maternalStation.utilaizeTheEnergyOfCPUGroup(1);
+                if (maternalStation.stationCurrentLevel == 0 && CommonProperties.energyOfStationGroups[maternalStation.groupWhereTheStationIs] > CommonProperties.D4ProdEnergy) maternalStation.utilaizeTheEnergyOfCPUGroup(1); 
+                else if (maternalStation.stationCurrentLevel == 1 && CommonProperties.energyOfStationGroups[maternalStation.groupWhereTheStationIs] > CommonProperties.D3ProdEnergy) maternalStation.utilaizeTheEnergyOfCPUGroup(1); 
+                else if (maternalStation.stationCurrentLevel == 1 && CommonProperties.energyOfStationGroups[maternalStation.groupWhereTheStationIs] > CommonProperties.D2ProdEnergy) maternalStation.utilaizeTheEnergyOfCPUGroup(1); 
+                else if (maternalStation.stationCurrentLevel == 1 && CommonProperties.energyOfStationGroups[maternalStation.groupWhereTheStationIs] > CommonProperties.D1ProdEnergy) maternalStation.utilaizeTheEnergyOfCPUGroup(1);
             }
             else
             {

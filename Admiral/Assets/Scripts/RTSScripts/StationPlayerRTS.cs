@@ -239,7 +239,7 @@ public class StationPlayerRTS : StationClass
     //to catch the energon
     public void makeAShotFromStation(bool groupOfStation) 
     {
-        if (groupOfStation) CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] -= energyRequiredToShot;
+        if (groupOfStation) CommonProperties.energyOfStationGroups[groupWhereTheStationIs] -= energyRequiredToShot;
         else energyOfStation -= energyRequiredToShot;
         foreach (StationPlayerRTS stationPlayer in CommonProperties.playerStations) stationPlayer.checkIfStationCanConnect();
         if (CommonProperties.stationPanelIsActive) CommonProperties.stationPanelScript.updateVariablesAfterEnergyChanges();
@@ -260,9 +260,9 @@ public class StationPlayerRTS : StationClass
     private void checkIfStationCanShot() {
         if (closestEnegon != null)
         {
-            if (groupsWhereTheStationIs != null && groupsWhereTheStationIs.Count > 0)
+            if (groupWhereTheStationIs != null && groupWhereTheStationIs.Count > 0)
             {
-                if (distanceToEnergon() < energonCatchDistance && !shotIsMade && CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] >= energyRequiredToShot && closestEnegon.isActiveAndEnabled)
+                if (distanceToEnergon() < energonCatchDistance && !shotIsMade && CommonProperties.energyOfStationGroups[groupWhereTheStationIs] >= energyRequiredToShot && closestEnegon.isActiveAndEnabled)
                 {
                     if (!StationAttackButton.playerStations.Contains(this)) attackButton.addStationToButton(this, closestEnegon);
                     aimingLine.SetPosition(0, stationTransform.position);
@@ -319,16 +319,16 @@ public class StationPlayerRTS : StationClass
         }
     }
 
-    public void checkIfStationCanConnect()
+    public override void checkIfStationCanConnect()
     {
-        if (groupsWhereTheStationIs != null && groupsWhereTheStationIs.Count > 0)
+        if (groupWhereTheStationIs != null && groupWhereTheStationIs.Count > 0)
         {
-            if (CommonProperties.energyOfStationGroups[groupsWhereTheStationIs] >= energyToConnection)
+            if (CommonProperties.energyOfStationGroups[groupWhereTheStationIs] >= energyToConnection)
             {
                 for (int i = 0; i < CommonProperties.playerStations.Count; i++)
                 {
                     if (CommonProperties.playerStations[i] != this && (CommonProperties.playerStations[i].stationPosition - stationPosition).magnitude < oneStepCloseStationsMaxDistance
-                        && !groupsWhereTheStationIs.Contains(CommonProperties.playerStations[i]))
+                        && !groupWhereTheStationIs.Contains(CommonProperties.playerStations[i]))
                     {
                         connectionToken.SetActive(true);
                         break;
@@ -370,7 +370,7 @@ public class StationPlayerRTS : StationClass
 
     private void energyIncrementAndCheckTheStationPanel()
     {
-        if (groupsWhereTheStationIs!=null&& groupsWhereTheStationIs.Count > 0) CommonProperties.energyOfStationGroups[groupsWhereTheStationIs]++; 
+        if (groupWhereTheStationIs!=null&& groupWhereTheStationIs.Count > 0) CommonProperties.energyOfStationGroups[groupWhereTheStationIs]++; 
         else energyOfStation++;
         if (stationPanelIsActiveForThis)
         {
@@ -477,7 +477,8 @@ public class StationPlayerRTS : StationClass
         station.shotTimerTransformIndex = -6f / station.stationShotTime;
         station.ShipsAssigned = ShipsAssigned;
         station.fillingLine.localPosition = new Vector3(0, 0, 0); //make full life to new station
-        if (groupsWhereTheStationIs!=null&& groupsWhereTheStationIs.Count>0) connectUpgradedStationToGroup(station);
+        station.ConnectedStations.Clear();
+        if (groupWhereTheStationIs!=null&& groupWhereTheStationIs.Count>0) connectUpgradedStationToGroup(station);
         ObjectPulled.transform.position = stationPosition;
         station.stationTransform = ObjectPulled.transform;
         station.stationPosition = stationPosition;
@@ -491,8 +492,8 @@ public class StationPlayerRTS : StationClass
     }
 
     private void connectUpgradedStationToGroup(StationPlayerRTS station) {
-        station.groupsWhereTheStationIs = groupsWhereTheStationIs;
-        station.groupsWhereTheStationIs.Add(station);
+        station.groupWhereTheStationIs = groupWhereTheStationIs;
+        station.groupWhereTheStationIs.Add(station);
         //station.connectedStationsCount = connectedStationsCount;
         foreach (StationClass stationConnected in ConnectedStations)
         {

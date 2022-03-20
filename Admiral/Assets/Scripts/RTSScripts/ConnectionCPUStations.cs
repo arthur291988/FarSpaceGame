@@ -32,7 +32,7 @@ public class ConnectionCPUStations : MonoBehaviour
     public static void setConnections(StationClass stationConnectionStartFromParam, StationClass stationToConnectParam) {
 
         ObjectPulled = null;
-
+        ObjectPulledList = null;
         stationConnectionStartFrom = stationConnectionStartFromParam;
         stationToConnect = stationToConnectParam;
         instantiateConnectionLine();
@@ -43,6 +43,7 @@ public class ConnectionCPUStations : MonoBehaviour
         ConnectionLine lineScript = lineToDragFromStation.gameObject.GetComponent<ConnectionLine>();
         lineScript.stations.Add(stationToConnect);
         lineScript.stations.Add(stationConnectionStartFrom);
+        //Debug.Log(lineScript.stations.Count);
         //if there is no connection line collection yet in dictionary we create it first
         if (!CommonProperties.connectionLines.ContainsKey(stationConnectionStartFrom.CPUNumber)) CommonProperties.connectionLines.Add(stationConnectionStartFrom.CPUNumber, new List<ConnectionLine>());
         CommonProperties.connectionLines[stationConnectionStartFrom.CPUNumber].Add(lineScript);
@@ -52,11 +53,12 @@ public class ConnectionCPUStations : MonoBehaviour
         energyTransporter.SetActive(true);
         lineScript.lineIsSet = true;
         setStationGroupForCPU();
-        if (stationConnectionStartFrom.groupsWhereTheStationIs != null && stationConnectionStartFrom.groupsWhereTheStationIs.Count > 0)
-        {
-            CommonProperties.energyOfStationGroups[stationConnectionStartFrom.groupsWhereTheStationIs] -= stationConnectionStartFrom.energyToConnection;
-        }
-        else stationConnectionStartFrom.energyOfStation -= stationConnectionStartFrom.energyToConnection;
+        //Debug.Log(lineScript.stations.Count + "  this one is second call");
+        //if (stationConnectionStartFrom.groupsWhereTheStationIs != null && stationConnectionStartFrom.groupsWhereTheStationIs.Count > 0)
+        //{
+        //    CommonProperties.energyOfStationGroups[stationConnectionStartFrom.groupsWhereTheStationIs] -= stationConnectionStartFrom.energyToConnection;
+        //}
+        //else stationConnectionStartFrom.energyOfStation -= stationConnectionStartFrom.energyToConnection;
         //foreach (StationPlayerRTS stationPlayer in CommonProperties.playerStations) stationPlayer.checkIfStationCanConnect();
     }
     private static void setStationGroupForCPU()
@@ -66,15 +68,20 @@ public class ConnectionCPUStations : MonoBehaviour
         {
             List<List<StationClass>> newGroup = new List<List<StationClass>>();
             List<StationClass> newConnection = new List<StationClass>();
-            CommonProperties.StationGroups.Add(stationToConnect.CPUNumber, newGroup);
-            newGroup.Add(newConnection);
+            if (CommonProperties.StationGroups.ContainsKey(stationConnectionStartFrom.CPUNumber)) CommonProperties.StationGroups[stationConnectionStartFrom.CPUNumber].Add(newConnection);
+            //so if there no station groups of this CPU it is first created
+            else
+            {
+                CommonProperties.StationGroups.Add(stationConnectionStartFrom.CPUNumber, newGroup);
+                newGroup.Add(newConnection);
+            }
             newConnection.Add(stationConnectionStartFrom);
             stationConnectionStartFrom.ConnectedStations.Add(stationToConnect);
             //stationConnectionStartFrom.connectionsCount++;
-            stationConnectionStartFrom.groupsWhereTheStationIs = newConnection;
+            stationConnectionStartFrom.groupWhereTheStationIs = newConnection;
             newConnection.Add(stationToConnect);
             stationToConnect.ConnectedStations.Add(stationConnectionStartFrom);
-            stationToConnect.groupsWhereTheStationIs = newConnection;
+            stationToConnect.groupWhereTheStationIs = newConnection;
             CommonProperties.energyOfStationGroups.Add(newConnection, 0);
             CommonProperties.energyOfStationGroups[newConnection] = stationToConnect.energyOfStation + stationToConnect.energyOfStationToUPGradeStation + stationToConnect.energyOfStationToUPGradeGun + stationToConnect.energyOfStationToSetConnection +
                 stationConnectionStartFrom.energyOfStation + stationConnectionStartFrom.energyOfStationToUPGradeStation + stationConnectionStartFrom.energyOfStationToUPGradeGun + stationConnectionStartFrom.energyOfStationToSetConnection;
@@ -82,26 +89,26 @@ public class ConnectionCPUStations : MonoBehaviour
         //connecting one station to the connection group
         else if (stationConnectionStartFrom.ConnectedStations.Count < 1)
         {
-            stationConnectionStartFrom.groupsWhereTheStationIs = stationToConnect.groupsWhereTheStationIs;
-            stationToConnect.groupsWhereTheStationIs.Add(stationConnectionStartFrom);
+            stationConnectionStartFrom.groupWhereTheStationIs = stationToConnect.groupWhereTheStationIs;
+            stationToConnect.groupWhereTheStationIs.Add(stationConnectionStartFrom);
             stationToConnect.ConnectedStations.Add(stationConnectionStartFrom);
             stationConnectionStartFrom.ConnectedStations.Add(stationToConnect);
-            CommonProperties.energyOfStationGroups[stationToConnect.groupsWhereTheStationIs] += stationConnectionStartFrom.energyOfStation;
-            CommonProperties.energyOfStationGroups[stationToConnect.groupsWhereTheStationIs] += stationConnectionStartFrom.energyOfStationToUPGradeStation;
-            CommonProperties.energyOfStationGroups[stationToConnect.groupsWhereTheStationIs] += stationConnectionStartFrom.energyOfStationToUPGradeGun;
-            CommonProperties.energyOfStationGroups[stationToConnect.groupsWhereTheStationIs] += stationConnectionStartFrom.energyOfStationToSetConnection;
+            CommonProperties.energyOfStationGroups[stationToConnect.groupWhereTheStationIs] += stationConnectionStartFrom.energyOfStation;
+            CommonProperties.energyOfStationGroups[stationToConnect.groupWhereTheStationIs] += stationConnectionStartFrom.energyOfStationToUPGradeStation;
+            CommonProperties.energyOfStationGroups[stationToConnect.groupWhereTheStationIs] += stationConnectionStartFrom.energyOfStationToUPGradeGun;
+            CommonProperties.energyOfStationGroups[stationToConnect.groupWhereTheStationIs] += stationConnectionStartFrom.energyOfStationToSetConnection;
         }
         //connecting one station to the connection group
         else if (stationToConnect.ConnectedStations.Count < 1)
         {
-            stationToConnect.groupsWhereTheStationIs = stationConnectionStartFrom.groupsWhereTheStationIs;
-            stationConnectionStartFrom.groupsWhereTheStationIs.Add(stationToConnect);
+            stationToConnect.groupWhereTheStationIs = stationConnectionStartFrom.groupWhereTheStationIs;
+            stationConnectionStartFrom.groupWhereTheStationIs.Add(stationToConnect);
             stationToConnect.ConnectedStations.Add(stationConnectionStartFrom);
             stationConnectionStartFrom.ConnectedStations.Add(stationToConnect);
-            CommonProperties.energyOfStationGroups[stationConnectionStartFrom.groupsWhereTheStationIs] += stationToConnect.energyOfStation;
-            CommonProperties.energyOfStationGroups[stationToConnect.groupsWhereTheStationIs] += stationToConnect.energyOfStationToUPGradeStation;
-            CommonProperties.energyOfStationGroups[stationToConnect.groupsWhereTheStationIs] += stationToConnect.energyOfStationToUPGradeGun;
-            CommonProperties.energyOfStationGroups[stationToConnect.groupsWhereTheStationIs] += stationToConnect.energyOfStationToSetConnection;
+            CommonProperties.energyOfStationGroups[stationConnectionStartFrom.groupWhereTheStationIs] += stationToConnect.energyOfStation;
+            CommonProperties.energyOfStationGroups[stationToConnect.groupWhereTheStationIs] += stationToConnect.energyOfStationToUPGradeStation;
+            CommonProperties.energyOfStationGroups[stationToConnect.groupWhereTheStationIs] += stationToConnect.energyOfStationToUPGradeGun;
+            CommonProperties.energyOfStationGroups[stationToConnect.groupWhereTheStationIs] += stationToConnect.energyOfStationToSetConnection;
             //stationConnectionStartFrom.connectionsCount++;
             //stationToConnect.connectionsCount++;
         }
@@ -109,17 +116,17 @@ public class ConnectionCPUStations : MonoBehaviour
         else if (stationConnectionStartFrom.ConnectedStations.Count > 0 && stationToConnect.ConnectedStations.Count > 0)
         {
 
-            if (stationConnectionStartFrom.groupsWhereTheStationIs != stationToConnect.groupsWhereTheStationIs)
+            if (stationConnectionStartFrom.groupWhereTheStationIs != stationToConnect.groupWhereTheStationIs)
             {
-                List<StationClass> tempClass = stationToConnect.groupsWhereTheStationIs;
+                List<StationClass> tempClass = stationToConnect.groupWhereTheStationIs;
                 foreach (StationClass station in tempClass)
                 {
-                    stationConnectionStartFrom.groupsWhereTheStationIs.Add(station);
-                    station.groupsWhereTheStationIs = stationConnectionStartFrom.groupsWhereTheStationIs;
-                    CommonProperties.energyOfStationGroups[stationConnectionStartFrom.groupsWhereTheStationIs] += station.energyOfStation;
-                    CommonProperties.energyOfStationGroups[stationToConnect.groupsWhereTheStationIs] += station.energyOfStationToUPGradeStation;
-                    CommonProperties.energyOfStationGroups[stationToConnect.groupsWhereTheStationIs] += station.energyOfStationToUPGradeGun;
-                    CommonProperties.energyOfStationGroups[stationToConnect.groupsWhereTheStationIs] += station.energyOfStationToSetConnection;
+                    stationConnectionStartFrom.groupWhereTheStationIs.Add(station);
+                    station.groupWhereTheStationIs = stationConnectionStartFrom.groupWhereTheStationIs;
+                    CommonProperties.energyOfStationGroups[stationConnectionStartFrom.groupWhereTheStationIs] += station.energyOfStation;
+                    CommonProperties.energyOfStationGroups[stationToConnect.groupWhereTheStationIs] += station.energyOfStationToUPGradeStation;
+                    CommonProperties.energyOfStationGroups[stationToConnect.groupWhereTheStationIs] += station.energyOfStationToUPGradeGun;
+                    CommonProperties.energyOfStationGroups[stationToConnect.groupWhereTheStationIs] += station.energyOfStationToSetConnection;
                 }
                 stationToConnect.ConnectedStations.Add(stationConnectionStartFrom);
                 stationConnectionStartFrom.ConnectedStations.Add(stationToConnect);
@@ -129,13 +136,13 @@ public class ConnectionCPUStations : MonoBehaviour
                 CommonProperties.energyOfStationGroups.Remove(tempClass);
                 tempClass = null;
             }
-            else
-            {
-                stationToConnect.ConnectedStations.Add(stationConnectionStartFrom);
-                stationConnectionStartFrom.ConnectedStations.Add(stationToConnect);
-                //stationConnectionStartFrom.connectionsCount++;
-                //stationToConnect.connectionsCount++;
-            }
+            //else
+            //{
+            //    stationToConnect.ConnectedStations.Add(stationConnectionStartFrom);
+            //    stationConnectionStartFrom.ConnectedStations.Add(stationToConnect);
+            //    //stationConnectionStartFrom.connectionsCount++;
+            //    //stationToConnect.connectionsCount++;
+            //}
         }
     }
 

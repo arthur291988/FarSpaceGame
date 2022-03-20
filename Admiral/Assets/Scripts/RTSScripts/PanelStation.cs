@@ -127,7 +127,7 @@ public class PanelStation : MonoBehaviour
         stationPosition = this.station.stationPosition;
         //radiusOfShipsRingAroundStation = station.radiusOfShipsRingAroundStation;
         stepOfCircleAroundStationToLaunchShips = 0;
-        if (station.groupsWhereTheStationIs != null && station.groupsWhereTheStationIs.Count > 0) ConnectionsToken.SetActive(true);
+        if (station.groupWhereTheStationIs != null && station.groupWhereTheStationIs.Count > 0) ConnectionsToken.SetActive(true);
     }
 
     private void checkIfStationCanUpgrade()
@@ -138,9 +138,9 @@ public class PanelStation : MonoBehaviour
             else if (station.stationCurrentLevel == 1) upgradeButtonImg.sprite = Station2Sprite;
             else if (station.stationCurrentLevel == 2) upgradeButtonImg.sprite = Station1Sprite;
             energyForUpgrade.text = station.energyToNextUpgradeOfStation.ToString();
-            if (station.groupsWhereTheStationIs != null && station.groupsWhereTheStationIs.Count > 0)
+            if (station.groupWhereTheStationIs != null && station.groupWhereTheStationIs.Count > 0)
             {
-                if (CommonProperties.energyOfStationGroups[station.groupsWhereTheStationIs] >= station.energyToNextUpgradeOfStation)
+                if (CommonProperties.energyOfStationGroups[station.groupWhereTheStationIs] >= station.energyToNextUpgradeOfStation)
                 {
                     upgradeButton.interactable = true;
                 }
@@ -173,9 +173,9 @@ public class PanelStation : MonoBehaviour
             else if (station.stationCurrentLevel == 2) gunButtonImg.sprite = Gun2Sprite;
             else if (station.stationCurrentLevel == 3) gunButtonImg.sprite = Gun3Sprite;
             energyForGun.text = station.energyToNextUpgradeOfGun.ToString();
-            if (station.groupsWhereTheStationIs != null && station.groupsWhereTheStationIs.Count > 0)
+            if (station.groupWhereTheStationIs != null && station.groupWhereTheStationIs.Count > 0)
             {
-                if (CommonProperties.energyOfStationGroups[station.groupsWhereTheStationIs] >= station.energyToNextUpgradeOfGun)
+                if (CommonProperties.energyOfStationGroups[station.groupWhereTheStationIs] >= station.energyToNextUpgradeOfGun)
                 {
                     gunButton.interactable = true;
                 }
@@ -244,9 +244,9 @@ public class PanelStation : MonoBehaviour
 
     private void updateStationUpgradeVariables()
     {
-        if (station.groupsWhereTheStationIs != null && station.groupsWhereTheStationIs.Count > 0)
+        if (station.groupWhereTheStationIs != null && station.groupWhereTheStationIs.Count > 0)
         {
-            if (CommonProperties.energyOfStationGroups[station.groupsWhereTheStationIs] >= station.energyToNextUpgradeOfStation)
+            if (CommonProperties.energyOfStationGroups[station.groupWhereTheStationIs] >= station.energyToNextUpgradeOfStation)
             {
                 if (!upgradeButton.interactable) upgradeButton.interactable = true;
             }
@@ -269,9 +269,9 @@ public class PanelStation : MonoBehaviour
     }
     private void updateGunUpgradeVariables()
     {
-        if (station.groupsWhereTheStationIs != null && station.groupsWhereTheStationIs.Count > 0)
+        if (station.groupWhereTheStationIs != null && station.groupWhereTheStationIs.Count > 0)
         {
-            if (CommonProperties.energyOfStationGroups[station.groupsWhereTheStationIs] >= station.energyToNextUpgradeOfGun)
+            if (CommonProperties.energyOfStationGroups[station.groupWhereTheStationIs] >= station.energyToNextUpgradeOfGun)
             {
                 if (!gunButton.interactable) gunButton.interactable = true;
             }
@@ -288,9 +288,9 @@ public class PanelStation : MonoBehaviour
     }
     private void updateVariablesOfStation()
     {
-        if (station.groupsWhereTheStationIs!=null && station.groupsWhereTheStationIs.Count > 0)
+        if (station.groupWhereTheStationIs!=null && station.groupWhereTheStationIs.Count > 0)
         {
-            energyOfStation.text = CommonProperties.energyOfStationGroups[station.groupsWhereTheStationIs].ToString("0");
+            energyOfStation.text = CommonProperties.energyOfStationGroups[station.groupWhereTheStationIs].ToString("0");
         }
         else
         {
@@ -300,22 +300,22 @@ public class PanelStation : MonoBehaviour
     }
     private void checkIfShipsCanBeProduced()
     {
-        if (station.groupsWhereTheStationIs != null && station.groupsWhereTheStationIs.Count > 0) {
+        if (station.groupWhereTheStationIs != null && station.groupWhereTheStationIs.Count > 0) {
             if (station.ShipsAssigned < station.ShipsLimit)
             {
-                if (energyCruiserCost <= CommonProperties.energyOfStationGroups[station.groupsWhereTheStationIs])
+                if (energyCruiserCost <= CommonProperties.energyOfStationGroups[station.groupWhereTheStationIs])
                 {
                     if (!CruiserProductionButton.interactable) CruiserProductionButton.interactable = true;
                 }
                 else if (CruiserProductionButton.interactable) CruiserProductionButton.interactable = false;
 
-                if (energyDestrCost <= CommonProperties.energyOfStationGroups[station.groupsWhereTheStationIs])
+                if (energyDestrCost <= CommonProperties.energyOfStationGroups[station.groupWhereTheStationIs])
                 {
                     if (!DestrProductionButton.interactable) DestrProductionButton.interactable = true;
                 }
                 else if (DestrProductionButton.interactable) DestrProductionButton.interactable = false;
                 //only stations higher than 1 level can produce paralizing destroyers
-                if (energyDestrParCost <= CommonProperties.energyOfStationGroups[station.groupsWhereTheStationIs] && station.stationCurrentLevel > 1)
+                if (energyDestrParCost <= CommonProperties.energyOfStationGroups[station.groupWhereTheStationIs] && station.stationCurrentLevel > 1)
                 {
                     if (!DestrParProductionButton.interactable) DestrParProductionButton.interactable = true;
                 }
@@ -438,9 +438,9 @@ public class PanelStation : MonoBehaviour
 
     private void consumeTheEnergy(int consumeAmount, bool isStationUpgrade)
     {
-        if (station.groupsWhereTheStationIs != null && station.groupsWhereTheStationIs.Count > 0)
+        if (station.groupWhereTheStationIs != null && station.groupWhereTheStationIs.Count > 0)
         {
-            CommonProperties.energyOfStationGroups[station.groupsWhereTheStationIs] -= consumeAmount;
+            CommonProperties.energyOfStationGroups[station.groupWhereTheStationIs] -= consumeAmount;
         }
         else
         {
