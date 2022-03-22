@@ -117,6 +117,9 @@ public class ConnectionPLayerStations : Singleton<ConnectionPLayerStations>
             stationToConnect.groupWhereTheStationIs= newConnection;
             CommonProperties.energyOfStationGroups.Add(newConnection,0);
             CommonProperties.energyOfStationGroups[newConnection] = stationToConnect.energyOfStation + stationConnectionStartFrom.energyOfStation;
+            //leaving some energy to station for a case if it will in future be out of any group
+            stationConnectionStartFrom.energyOfStation = 30; 
+            stationToConnect.energyOfStation = 30;
         }
         //connecting one station to the connection group
         else if (stationConnectionStartFrom.ConnectedStations.Count < 1) {
@@ -125,6 +128,7 @@ public class ConnectionPLayerStations : Singleton<ConnectionPLayerStations>
             stationToConnect.ConnectedStations.Add(stationConnectionStartFrom);
             stationConnectionStartFrom.ConnectedStations.Add(stationToConnect);
             CommonProperties.energyOfStationGroups[stationToConnect.groupWhereTheStationIs] += stationConnectionStartFrom.energyOfStation;
+            stationConnectionStartFrom.energyOfStation = 30; //leaving some energy to station for a case if it will in future be out of any group
         }
         //connecting one station to the connection group
         else if (stationToConnect.ConnectedStations.Count < 1) {
@@ -133,8 +137,7 @@ public class ConnectionPLayerStations : Singleton<ConnectionPLayerStations>
             stationToConnect.ConnectedStations.Add(stationConnectionStartFrom);
             stationConnectionStartFrom.ConnectedStations.Add(stationToConnect);
             CommonProperties.energyOfStationGroups[stationConnectionStartFrom.groupWhereTheStationIs] += stationToConnect.energyOfStation;
-            //stationConnectionStartFrom.connectionsCount++;
-            //stationToConnect.connectionsCount++;
+            stationToConnect.energyOfStation = 30;//leaving some energy to station for a case if it will in future be out of any group
         }
         //connecting one connection group to other connection group
         else if (stationConnectionStartFrom.ConnectedStations.Count> 0 && stationToConnect.ConnectedStations.Count > 0) {
@@ -147,6 +150,7 @@ public class ConnectionPLayerStations : Singleton<ConnectionPLayerStations>
                     stationConnectionStartFrom.groupWhereTheStationIs.Add(station);
                     station.groupWhereTheStationIs = stationConnectionStartFrom.groupWhereTheStationIs;
                     CommonProperties.energyOfStationGroups[stationConnectionStartFrom.groupWhereTheStationIs] += station.energyOfStation;
+                    station.energyOfStation = 30; //leaving some energy to station for a case if it will in future be out of any group
                 }
                 stationToConnect.ConnectedStations.Add(stationConnectionStartFrom);
                 stationConnectionStartFrom.ConnectedStations.Add(stationToConnect);
@@ -154,15 +158,15 @@ public class ConnectionPLayerStations : Singleton<ConnectionPLayerStations>
                 //stationToConnect.connectionsCount++;
                 CommonProperties.StationGroups[stationToConnect.CPUNumber].Remove(tempClass);
                 CommonProperties.energyOfStationGroups.Remove(tempClass);
-                tempClass = null;
+                
             }
-            else
-            {
-                stationToConnect.ConnectedStations.Add(stationConnectionStartFrom);
-                stationConnectionStartFrom.ConnectedStations.Add(stationToConnect);
-                //stationConnectionStartFrom.connectionsCount++;
-                //stationToConnect.connectionsCount++;
-            }
+            //else
+            //{
+            //    stationToConnect.ConnectedStations.Add(stationConnectionStartFrom);
+            //    stationConnectionStartFrom.ConnectedStations.Add(stationToConnect);
+            //    //stationConnectionStartFrom.connectionsCount++;
+            //    //stationToConnect.connectionsCount++;
+            //}
         }
     }
 

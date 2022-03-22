@@ -102,12 +102,12 @@ public class PanelStation : MonoBehaviour
     private CameraManager cameraManager;
 
 
-    int commonEnenrgy;
+    //int commonEnenrgy;
 
 
     private void Start()
     {
-        commonEnenrgy = 0;
+        //commonEnenrgy = 0;
         cameraManager = CommonProperties.MainCameraOfRTS.GetComponent<CameraManager>();
     }
     private void OnEnable()

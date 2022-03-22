@@ -505,7 +505,6 @@ public class StationPlayerRTS : StationClass
             }
         }
 
-
         //deal with connections
         //connect upgraded station with old station connections
         foreach (StationClass stationsConnectedToOldStation in ConnectedStations) station.ConnectedStations.Add(stationsConnectedToOldStation);

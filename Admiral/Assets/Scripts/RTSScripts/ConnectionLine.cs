@@ -28,22 +28,22 @@ public class ConnectionLine : MonoBehaviour
         indexOfStation = 0;
     }
 
-    public void disactivateThisLine(int CPUNumber, StationClass station)
+    public void disactivateThisLine(int CPUNumber/*, StationClass station*/)
     {
         CommonProperties.connectionLines[CPUNumber].Remove(this);
-        stations.Remove(station);
-        //if station to which was connected destroyed station has no other connections than it loses it's group belonging
-        if (stations[0].ConnectedStations.Count < 1)
-        {
-            stations[0].groupWhereTheStationIs.Remove(stations[0]);
-            //removing the station group if it does not contain any member any more
-            if (stations[0].groupWhereTheStationIs.Count < 1)
-            {
-                CommonProperties.StationGroups[stations[0].CPUNumber].Remove(stations[0].groupWhereTheStationIs);
-                CommonProperties.energyOfStationGroups.Remove(stations[0].groupWhereTheStationIs);
-            }
-            stations[0].groupWhereTheStationIs = null;
-        }
+        //stations.Remove(station);
+        ////if station to which was connected destroyed station has no other connections than it loses it's group belonging
+        //if (stations[0].ConnectedStations.Count < 1)
+        //{
+        //    stations[0].groupWhereTheStationIs.Remove(stations[0]);
+        //    //removing the station group if it does not contain any member any more
+        //    if (stations[0].groupWhereTheStationIs.Count < 1)
+        //    {
+        //        CommonProperties.StationGroups[stations[0].CPUNumber].Remove(stations[0].groupWhereTheStationIs);
+        //        CommonProperties.energyOfStationGroups.Remove(stations[0].groupWhereTheStationIs);
+        //    }
+        //    stations[0].groupWhereTheStationIs = null;
+        //}
         stations.Clear();
         lineIsSet = false;
         enenrgyTransporter.SetActive(false);

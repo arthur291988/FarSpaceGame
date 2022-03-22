@@ -240,22 +240,156 @@ public class StationClass : MonoBehaviour
             ObjectPulled.transform.position = stationPosition;
             ObjectPulled.SetActive(true);
             for (int i = 0; i < CommonProperties.CPUStations.Count; i++) CommonProperties.CPUStations[i].giveAnOrderToFleet();
+
             //reducing the energy of group of stations in case if this station is destroyed and if there left any group at all. So one station in group is not considered as group
             if (groupWhereTheStationIs != null /*&& groupWhereTheStationIs.Count > 0*/)
             {
-                if (groupWhereTheStationIs.Count > 2)
+                //closing the panel if station of player is destroyed and if it was connected to some
+                if (CPUNumber == 0 && CommonProperties.stationPanelIsActive && groupWhereTheStationIs !=null) CommonProperties.stationPanelScript.closeThePanel(false);
+
+                //sending the signal of cutting the connection with old station to other stations and set null to their droup references cause the group each time is regrouped
+                foreach (StationClass stationsConnectedToOldStation in ConnectedStations)
                 {
-                    CommonProperties.energyOfStationGroups[groupWhereTheStationIs] -= CommonProperties.energyOfStationGroups[groupWhereTheStationIs] / groupWhereTheStationIs.Count;
-                    //updating the panel info if it is opened by player
-                    if (CPUNumber == 0 && CommonProperties.stationPanelIsActive) CommonProperties.stationPanelScript.updateVariablesAfterEnergyChanges();
+                    stationsConnectedToOldStation.ConnectedStations.Remove(this);
                 }
+
+                //removing the station group from master group and from energy graoups
+                CommonProperties.StationGroups[CPUNumber].Remove(groupWhereTheStationIs);
+                CommonProperties.energyOfStationGroups.Remove(groupWhereTheStationIs);
+
+                //removing the whole group of this station to regroup it
+                foreach (StationClass stationsInGroupOfDestroyingStation in groupWhereTheStationIs) stationsInGroupOfDestroyingStation.groupWhereTheStationIs = null;
+
+                //removing the lines that were connected with destroying station
                 for (int i = 0; i < CommonProperties.connectionLines[CPUNumber].Count; i++)
                 {
                     if (CommonProperties.connectionLines[CPUNumber][i].stations.Contains(this))
                     {
-                        CommonProperties.connectionLines[CPUNumber][i].disactivateThisLine(CPUNumber, this);
+                        CommonProperties.connectionLines[CPUNumber][i].disactivateThisLine(CPUNumber/*, this*/);
                     }
                 }
+
+                //regrouping the stations that were in the group and that are still have connections
+                for (int i = 0; i < CommonProperties.connectionLines[CPUNumber].Count; i++)
+                {
+                    for (int y = 0; y < CommonProperties.connectionLines[CPUNumber].Count; y++)
+                    {
+                        if (CommonProperties.connectionLines[CPUNumber][i] != CommonProperties.connectionLines[CPUNumber][y])
+                        {
+                            if (CommonProperties.connectionLines[CPUNumber][i].stations[0].groupWhereTheStationIs == null && CommonProperties.connectionLines[CPUNumber][i].stations[1].groupWhereTheStationIs == null)
+                            {
+                                List<List<StationClass>> newGroup = new List<List<StationClass>>();
+                                List<StationClass> newConnection = new List<StationClass>();
+                                if (CommonProperties.StationGroups.ContainsKey(CPUNumber)) CommonProperties.StationGroups[CPUNumber].Add(newConnection);
+                                //so if there no station groups of this CPU it is first created
+                                else
+                                {
+                                    CommonProperties.StationGroups.Add(CPUNumber, newGroup);
+                                    newGroup.Add(newConnection);
+                                }
+                                newConnection.Add(CommonProperties.connectionLines[CPUNumber][i].stations[0]);
+                                CommonProperties.connectionLines[CPUNumber][i].stations[0].groupWhereTheStationIs = newConnection;
+                                newConnection.Add(CommonProperties.connectionLines[CPUNumber][i].stations[1]);
+                                CommonProperties.connectionLines[CPUNumber][i].stations[1].groupWhereTheStationIs = newConnection;
+                                CommonProperties.energyOfStationGroups.Add(newConnection, 0);
+                                CommonProperties.energyOfStationGroups[newConnection] = newConnection[0].energyOfStation + newConnection[1].energyOfStation; //no need to add other energyes cause they are zero at this point since were zero while connection
+                                
+                                //start to check adjacent lines if there is some
+                                if (CommonProperties.connectionLines[CPUNumber][i].stations.Contains(CommonProperties.connectionLines[CPUNumber][y].stations[0]) ||
+                                    CommonProperties.connectionLines[CPUNumber][i].stations.Contains(CommonProperties.connectionLines[CPUNumber][y].stations[1]))
+                                {
+                                    foreach (StationClass station in CommonProperties.connectionLines[CPUNumber][y].stations)
+                                    {
+                                        if (!CommonProperties.connectionLines[CPUNumber][i].stations[0].groupWhereTheStationIs.Contains(station) && station.groupWhereTheStationIs==null)
+                                        {
+                                            station.groupWhereTheStationIs = CommonProperties.connectionLines[CPUNumber][i].stations[0].groupWhereTheStationIs;
+                                            CommonProperties.connectionLines[CPUNumber][i].stations[0].groupWhereTheStationIs.Add(station);
+                                        }
+                                    }
+                                }
+
+
+                            }
+                            else if (CommonProperties.connectionLines[CPUNumber][i].stations[0].groupWhereTheStationIs == null)
+                            {
+                                //adding the null-group station to group of stations of second (not null-group) station
+                                CommonProperties.connectionLines[CPUNumber][i].stations[0].groupWhereTheStationIs = CommonProperties.connectionLines[CPUNumber][i].stations[1].groupWhereTheStationIs;
+
+                                //start to check adjacent lines if there is some
+                                if (CommonProperties.connectionLines[CPUNumber][i].stations.Contains(CommonProperties.connectionLines[CPUNumber][y].stations[0]) ||
+                                    CommonProperties.connectionLines[CPUNumber][i].stations.Contains(CommonProperties.connectionLines[CPUNumber][y].stations[1]))
+                                {
+                                    foreach (StationClass station in CommonProperties.connectionLines[CPUNumber][y].stations)
+                                    {
+                                        if (!CommonProperties.connectionLines[CPUNumber][i].stations[0].groupWhereTheStationIs.Contains(station) && station.groupWhereTheStationIs == null)
+                                        {
+                                            station.groupWhereTheStationIs = CommonProperties.connectionLines[CPUNumber][i].stations[0].groupWhereTheStationIs;
+                                            CommonProperties.connectionLines[CPUNumber][i].stations[0].groupWhereTheStationIs.Add(station);
+                                        }
+                                    }
+                                }
+                            }
+                            else if (CommonProperties.connectionLines[CPUNumber][i].stations[1].groupWhereTheStationIs == null)
+                            {
+                                //adding the null-group station to group of stations of second (not null-group) station
+                                CommonProperties.connectionLines[CPUNumber][i].stations[1].groupWhereTheStationIs = CommonProperties.connectionLines[CPUNumber][i].stations[0].groupWhereTheStationIs;
+                                CommonProperties.connectionLines[CPUNumber][i].stations[0].groupWhereTheStationIs.Add(CommonProperties.connectionLines[CPUNumber][i].stations[1]); 
+                                
+                                //start to check adjacent lines if there is some
+                                if (CommonProperties.connectionLines[CPUNumber][i].stations.Contains(CommonProperties.connectionLines[CPUNumber][y].stations[0]) ||
+                                    CommonProperties.connectionLines[CPUNumber][i].stations.Contains(CommonProperties.connectionLines[CPUNumber][y].stations[1]))
+                                {
+                                    foreach (StationClass station in CommonProperties.connectionLines[CPUNumber][y].stations)
+                                    {
+                                        if (!CommonProperties.connectionLines[CPUNumber][i].stations[0].groupWhereTheStationIs.Contains(station) && station.groupWhereTheStationIs == null)
+                                        {
+                                            station.groupWhereTheStationIs = CommonProperties.connectionLines[CPUNumber][i].stations[0].groupWhereTheStationIs;
+                                            CommonProperties.connectionLines[CPUNumber][i].stations[0].groupWhereTheStationIs.Add(station);
+                                        }
+                                    }
+                                }
+                            }
+                            else if (CommonProperties.connectionLines[CPUNumber][i].stations[0].groupWhereTheStationIs != null && CommonProperties.connectionLines[CPUNumber][i].stations[1].groupWhereTheStationIs != null)
+                            {
+                                //case if one station of line is in another group than second one. Adding one group to another and leaving only one of the groups
+                                if (CommonProperties.connectionLines[CPUNumber][i].stations[0].groupWhereTheStationIs != CommonProperties.connectionLines[CPUNumber][i].stations[1].groupWhereTheStationIs)
+                                {
+                                    List<StationClass> tempClass = CommonProperties.connectionLines[CPUNumber][i].stations[0].groupWhereTheStationIs;
+                                    foreach (StationClass station in tempClass)
+                                    {
+                                        CommonProperties.connectionLines[CPUNumber][i].stations[1].groupWhereTheStationIs.Add(station);
+                                        station.groupWhereTheStationIs = CommonProperties.connectionLines[CPUNumber][i].stations[1].groupWhereTheStationIs;
+                                        CommonProperties.energyOfStationGroups[station.groupWhereTheStationIs] += station.energyOfStation; //no need to add other energyes cause they are zero at this point since were zero while connection
+                                    }
+                                    CommonProperties.StationGroups[stationToConnect.CPUNumber].Remove(tempClass);
+                                    CommonProperties.energyOfStationGroups.Remove(tempClass);
+                                }
+
+                                //start to check adjacent lines if there is some
+                                if (CommonProperties.connectionLines[CPUNumber][i].stations.Contains(CommonProperties.connectionLines[CPUNumber][y].stations[0]) ||
+                                    CommonProperties.connectionLines[CPUNumber][i].stations.Contains(CommonProperties.connectionLines[CPUNumber][y].stations[1]))
+                                {
+                                    foreach (StationClass station in CommonProperties.connectionLines[CPUNumber][y].stations)
+                                    {
+                                        if (!CommonProperties.connectionLines[CPUNumber][i].stations[0].groupWhereTheStationIs.Contains(station) && station.groupWhereTheStationIs==null)
+                                        {
+                                            station.groupWhereTheStationIs = CommonProperties.connectionLines[CPUNumber][i].stations[0].groupWhereTheStationIs;
+                                            CommonProperties.connectionLines[CPUNumber][i].stations[0].groupWhereTheStationIs.Add(station);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                //    if (groupWhereTheStationIs.Count > 2)
+                //{
+                //    CommonProperties.energyOfStationGroups[groupWhereTheStationIs] -= CommonProperties.energyOfStationGroups[groupWhereTheStationIs] / groupWhereTheStationIs.Count;
+                //    //updating the panel info if it is opened by player
+                //    if (CPUNumber == 0 && CommonProperties.stationPanelIsActive) CommonProperties.stationPanelScript.updateVariablesAfterEnergyChanges();
+                //}
+                
             }
 
         }
@@ -267,18 +401,19 @@ public class StationClass : MonoBehaviour
         //    }
         //}
         if (gunSphereVisible != null) gunSphereVisible.SetActive(false);
-        if (groupWhereTheStationIs != null /*&& groupWhereTheStationIs.Count > 0*/)
-        {
-            //groupWhereTheStationIs.Remove(this);
-            //deleting the group of stations if there left no any stations in group or there left one station only
-            if (groupWhereTheStationIs.Count < 2)
-            {
-                CommonProperties.StationGroups[CPUNumber].Remove(groupWhereTheStationIs);
-                CommonProperties.energyOfStationGroups.Remove(groupWhereTheStationIs);
-                if (groupWhereTheStationIs.Count==1) groupWhereTheStationIs[0].groupWhereTheStationIs = null;
-            }
-            groupWhereTheStationIs = null;
-        }
+        //if (groupWhereTheStationIs != null /*&& groupWhereTheStationIs.Count > 0*/)
+        //{
+        //    //groupWhereTheStationIs.Remove(this);
+        //    //deleting the group of stations if there left no any stations in group or there left one station only
+        //    if (groupWhereTheStationIs.Count < 2)
+        //    {
+        //        CommonProperties.StationGroups[CPUNumber].Remove(groupWhereTheStationIs);
+        //        CommonProperties.energyOfStationGroups.Remove(groupWhereTheStationIs);
+        //        if (groupWhereTheStationIs.Count==1) groupWhereTheStationIs[0].groupWhereTheStationIs = null;
+        //    }
+        //    groupWhereTheStationIs = null;
+        //}
+        groupWhereTheStationIs = null;
         ConnectedStations.Clear();
         gameObject.SetActive(false);
         lifeLineAmount = 0;

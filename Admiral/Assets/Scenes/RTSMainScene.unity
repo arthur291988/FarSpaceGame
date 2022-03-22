@@ -18363,6 +18363,7 @@ GameObject:
   - component: {fileID: 2094376322}
   - component: {fileID: 2094376323}
   - component: {fileID: 2094376324}
+  - component: {fileID: 2094376325}
   m_Layer: 0
   m_Name: CommonProperties
   m_TagString: Untagged
@@ -18747,6 +18748,14 @@ MonoBehaviour:
   connectionSensorUI: {fileID: 1938372623}
   connectionSignalUI: {fileID: 270528889}
   connectionSensorRect: {fileID: 1938372624}
+--- !u!81 &2094376325
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2094376317}
+  m_Enabled: 1
 --- !u!1001 &2142990343
 PrefabInstance:
   m_ObjectHideFlags: 0
