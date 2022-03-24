@@ -477,9 +477,9 @@ public class StationPlayerRTS : StationClass
         station.shotTimerTransformIndex = -6f / station.stationShotTime;
         station.ShipsAssigned = ShipsAssigned;
         station.fillingLine.localPosition = new Vector3(0, 0, 0); //make full life to new station
+        station.ConnectedStations.Clear(); //clear the connections if there left any from previous life of pulled object
         if (groupWhereTheStationIs != null/*&& groupWhereTheStationIs.Count>0*/) connectUpgradedStationToGroup(station);
         else station.groupWhereTheStationIs = null;
-        station.ConnectedStations.Clear();
         ObjectPulled.transform.position = stationPosition;
         station.stationTransform = ObjectPulled.transform;
         station.stationPosition = stationPosition;

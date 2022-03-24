@@ -178,7 +178,7 @@ public class StationCPU : StationClass
 
     public override void utilaizeTheEnergy(bool isRecursionCall)
     {
-        int energyLeft;
+        int energyLeft=0;
         //holding the energy to upgrade the station itself and building or upgrading the gun of station
         if (!isRecursionCall)
         {
@@ -186,7 +186,8 @@ public class StationCPU : StationClass
             if (stationCurrentLevel < upgradeCounts || stationGunLevel < GunUpgradeCounts || stationToConnect!=null)
             {
                 //20/80 math means 80% of energy goes to upgrade or set connections
-                energyLeft = (int)(energyOfStation * 0.8f);
+                if (stationToConnect!=null) energyLeft = (int)(energyOfStation * 0.2f); //so if there is some station to connect around it will hold more to set connection
+                else energyLeft = (int)(energyOfStation * 0.8f); //if no station to connect station act more aggressive
                 energyOfStationToUPGrade += energyOfStation - energyLeft;
                 energyOfStation = energyLeft;
 
@@ -194,38 +195,40 @@ public class StationCPU : StationClass
             //utilizing the upgrade energy to upgrade the station itself or upgrade the gun or to set connections (which has highest priority)
             if (stationToConnect != null)
             {
-                if (stationCurrentLevel < upgradeCounts)
-                {
-                    if (stationGunLevel < GunUpgradeCounts)
-                    {
-                        energyOfStationToSetConnection += energyOfStationToUPGrade / 2;
-                        energyOfStationToUPGrade = energyOfStationToUPGrade / 2; //decrease the temp energy reserved to upgrade matters by two to use the left for upgrade station or gun
-                        energyOfStationToUPGradeStation += (int)(energyOfStationToUPGrade * 0.6f);
-                        energyOfStationToUPGradeGun += (int)(energyOfStationToUPGrade * 0.4f);
+                energyOfStationToSetConnection += energyOfStationToUPGrade;
+                energyOfStationToUPGrade = 0;
+                //if (stationCurrentLevel < upgradeCounts)
+                //{
+                //    if (stationGunLevel < GunUpgradeCounts)
+                //    {
+                //        energyOfStationToSetConnection += (int)(energyOfStationToUPGrade *0.7f);
+                //        energyOfStationToUPGrade -= energyOfStationToSetConnection; //decrease the temp energy reserved to upgrade matters by energy to connect to use the left for upgrade station or gun
+                //        energyOfStationToUPGradeStation += (int)(energyOfStationToUPGrade * 0.6f);
+                //        energyOfStationToUPGradeGun += (int)(energyOfStationToUPGrade * 0.4f);
 
-                        energyOfStationToUPGrade = 0;
-                    }
-                    else
-                    {
-                        energyOfStationToSetConnection += energyOfStationToUPGrade / 2;
-                        energyOfStationToUPGradeStation += energyOfStationToUPGrade / 2;
-                        energyOfStationToUPGrade = 0;
-                    }
-                }
-                else if (stationGunLevel < GunUpgradeCounts)
-                {
-                    energyOfStationToSetConnection += energyOfStationToUPGrade / 2;
-                    energyOfStationToUPGradeGun += energyOfStationToUPGrade / 2;
-                    energyOfStationToUPGrade = 0;
-                }
+                //        energyOfStationToUPGrade = 0;
+                //    }
+                //    else
+                //    {
+                //        energyOfStationToSetConnection += (int)(energyOfStationToUPGrade * 0.7f);
+                //        energyOfStationToUPGradeStation += (int)(energyOfStationToUPGrade * 0.3f);
+                //        energyOfStationToUPGrade = 0;
+                //    }
+                //}
+                //else if (stationGunLevel < GunUpgradeCounts)
+                //{
+                //    energyOfStationToSetConnection += (int)(energyOfStationToUPGrade * 0.8f);
+                //    energyOfStationToUPGradeGun += (int)(energyOfStationToUPGrade * 0.2f);
+                //    energyOfStationToUPGrade = 0;
+                //}
             }
             else {
                 if (stationCurrentLevel < upgradeCounts)
                 {
                     if (stationGunLevel < GunUpgradeCounts)
                     {
-                        energyOfStationToUPGradeStation += energyOfStationToUPGrade / 2;
-                        energyOfStationToUPGradeGun += energyOfStationToUPGrade / 2;
+                        energyOfStationToUPGradeStation += (int)(energyOfStationToUPGrade * 0.8f);
+                        energyOfStationToUPGradeGun += (int)(energyOfStationToUPGrade * 0.2f);
 
                         energyOfStationToUPGrade = 0;
                     }
@@ -981,7 +984,7 @@ public class StationCPU : StationClass
         station.stationShotTimer = station.stationShotTime;
         station.shotTimerTransformIndex = -6f / station.stationShotTime;
         station.ShipsAssigned = ShipsAssigned;
-        station.ConnectedStations.Clear();
+        station.ConnectedStations.Clear();//clear the connections if there left any from previous life of pulled object
         station.fillingLine.localPosition = new Vector3(0, 0, 0); //make full life to new station
         if (groupWhereTheStationIs != null /*&& groupWhereTheStationIs.Count > 0*/) connectUpgradedStationToGroup(station);
         else station.groupWhereTheStationIs = null;

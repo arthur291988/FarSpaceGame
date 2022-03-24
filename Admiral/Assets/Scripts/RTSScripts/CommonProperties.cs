@@ -176,15 +176,15 @@ public class CommonProperties : MonoBehaviour
     public static float star2FillingReducer = 0.8f;
     public static float star3FillingReducer = 0.7f;
 
-    public static int Station0EnergytoShot = 10;
-    public static int Station1EnergytoShot = 20;
-    public static int Station2EnergytoShot = 35;
-    public static int Station3EnergytoShot = 50;
+    public static int Station0EnergytoShot = 5; //10
+    public static int Station1EnergytoShot = 10; //20
+    public static int Station2EnergytoShot = 15; //35
+    public static int Station3EnergytoShot = 20; //50
 
     public static int Station0EnergyToConnection = 100;
     public static int Station1EnergyToConnection = 150;
     public static int Station2EnergyToConnection = 200;
-    public static int Station3EnergyToConnection = 300;
+    public static int Station3EnergyToConnection = 250;
 
     public static float Station0EnergyProduceTime = 7;
     public static float Station1EnergyProduceTime = 6;
@@ -201,10 +201,10 @@ public class CommonProperties : MonoBehaviour
     public static float Station2BulletSpeed = 16f;
     public static float Station3BulletSpeed = 20f;
 
-    public static float Station0ColorToEnergyMultiplyer = 15f;
-    public static float Station1ColorToEnergyMultiplyer = 20f;
-    public static float Station2ColorToEnergyMultiplyer = 25f;
-    public static float Station3ColorToEnergyMultiplyer = 30f;
+    public static float Station0ColorToEnergyMultiplyer = 5f; //15
+    public static float Station1ColorToEnergyMultiplyer = 10f; //20
+    public static float Station2ColorToEnergyMultiplyer = 15f; //25
+    public static float Station3ColorToEnergyMultiplyer = 20f; //30
 
     public static float Station0ShotTime = 20f;
     public static float Station1ShotTime = 17f;
@@ -337,11 +337,9 @@ public class CommonProperties : MonoBehaviour
         CPUMegaAttackTimer = megaAttackTime;
     }
 
-    //is used by CPU battle ships to avoid the ather stations on way to attack
+    //is used by CPU battle ships to avoid the other stations on way to attack
     private void populateTheCoordinatesBaseOfHexBordersDots()
     {
-
-
         //5 dots on left border of map where only 2 hexes ar one on top of other
         int x = 5;
         float xCoorPrev = 0;

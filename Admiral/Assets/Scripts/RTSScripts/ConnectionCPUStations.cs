@@ -43,6 +43,7 @@ public class ConnectionCPUStations : MonoBehaviour
         ConnectionLine lineScript = lineToDragFromStation.gameObject.GetComponent<ConnectionLine>();
         lineScript.stations.Add(stationToConnect);
         lineScript.stations.Add(stationConnectionStartFrom);
+        lineScript.setTheSpeedOfTransporter();
         //Debug.Log(lineScript.stations.Count);
         //if there is no connection line collection yet in dictionary we create it first
         if (!CommonProperties.connectionLines.ContainsKey(stationConnectionStartFrom.CPUNumber)) CommonProperties.connectionLines.Add(stationConnectionStartFrom.CPUNumber, new List<ConnectionLine>());

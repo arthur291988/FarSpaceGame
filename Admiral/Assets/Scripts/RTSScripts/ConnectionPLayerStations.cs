@@ -78,6 +78,7 @@ public class ConnectionPLayerStations : Singleton<ConnectionPLayerStations>
         ConnectionLine lineScript = lineToDragFromPlayerStation.gameObject.GetComponent<ConnectionLine>();
         lineScript.stations.Add(stationToConnect);
         lineScript.stations.Add(stationConnectionStartFrom);
+        lineScript.setTheSpeedOfTransporter();
         //if there is no connection line collection yet in dictionary we create it first
         if (!CommonProperties.connectionLines.ContainsKey(0)) CommonProperties.connectionLines.Add(0, new List<ConnectionLine>());
         CommonProperties.connectionLines[0].Add(lineScript);

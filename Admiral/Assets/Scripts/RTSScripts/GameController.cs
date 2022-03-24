@@ -186,7 +186,7 @@ public class GameController : MonoBehaviour
         station.Destr2Par = 0;
         station.Destr1 = 0;
         station.Destr1Par = 0;
-        station.energyOfStation = 2000;
+        station.energyOfStation = 20;
         station.fillingSpeed = 1;
         station.ShipsAssigned = 0;
         station.energyToConnection = CommonProperties.Station0EnergyToConnection;
@@ -239,7 +239,7 @@ public class GameController : MonoBehaviour
         stationCPU.Destr2Par = 0;
         stationCPU.Destr1 = 0;
         stationCPU.Destr1Par = 0;
-        stationCPU.energyOfStation = 4000; //40
+        stationCPU.energyOfStation = 150; //40
         stationCPU.fillingSpeed = 1;
         stationCPU.ShipsAssigned = 0;
         stationCPU.energyToConnection = CommonProperties.Station0EnergyToConnection;
@@ -291,7 +291,7 @@ public class GameController : MonoBehaviour
         stationCPU.Destr2Par = 0;
         stationCPU.Destr1 = 0;
         stationCPU.Destr1Par = 0;
-        stationCPU.energyOfStation = 4000; //40
+        stationCPU.energyOfStation = 150; //40
         stationCPU.fillingSpeed = 1;
         stationCPU.ShipsAssigned = 0;
         stationCPU.energyToConnection = CommonProperties.Station0EnergyToConnection;
@@ -346,7 +346,7 @@ public class GameController : MonoBehaviour
         stationCPU.Destr2Par = 0;
         stationCPU.Destr1 = 0;
         stationCPU.Destr1Par = 0;
-        stationCPU.energyOfStation = 4000; //40
+        stationCPU.energyOfStation = 150; //40
         stationCPU.fillingSpeed = 1;
         stationCPU.ShipsAssigned = 0;
         stationCPU.energyToConnection = CommonProperties.Station0EnergyToConnection;
@@ -401,7 +401,7 @@ public class GameController : MonoBehaviour
         stationCPU.Destr2Par = 0;
         stationCPU.Destr1 = 0;
         stationCPU.Destr1Par = 0;
-        stationCPU.energyOfStation = 4000; //40
+        stationCPU.energyOfStation = 150; //40
         stationCPU.fillingSpeed = 1;
         stationCPU.ShipsAssigned = 0;
         stationCPU.energyToConnection = CommonProperties.Station0EnergyToConnection;

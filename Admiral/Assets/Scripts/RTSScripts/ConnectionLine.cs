@@ -10,6 +10,8 @@ public class ConnectionLine : MonoBehaviour
     private int indexOfStation;
     [HideInInspector]
     public bool lineIsSet;
+    [HideInInspector]
+    public float transporterSpeed;
 
     //// Start is called before the first frame update
     //void Start()
@@ -50,16 +52,30 @@ public class ConnectionLine : MonoBehaviour
         gameObject.SetActive(false);
     }
 
+    public void setTheSpeedOfTransporter() {
+        if (stations[0].stationCurrentLevel > stations[1].stationCurrentLevel) transporterSpeed = stations[0].stationCurrentLevel + 2;
+        else if (stations[0].stationCurrentLevel < stations[1].stationCurrentLevel) transporterSpeed = stations[1].stationCurrentLevel + 2;
+        else {
+            transporterSpeed = stations[1].stationCurrentLevel == 0 ? 2 : stations[1].stationCurrentLevel == 1 ? 3 : stations[1].stationCurrentLevel == 2 ? 4 : 5;
+        }
+    }
+
     public void reassignStationAfterUpgrade(StationClass stationOld, StationClass stationNew) {
         lineIsSet = false;
         stations.Remove(stationOld);
         stations.Add(stationNew);
         lineIsSet = true;
+        setTheSpeedOfTransporter();
     }
 
     private void turnBackAndPassTheEnergy()
     {
-        /*if (stations[indexOfStation].groupWhereTheStationIs.Count > 0) */CommonProperties.energyOfStationGroups[stations[indexOfStation].groupWhereTheStationIs] += stations[indexOfStation].energyRequiredToShot; //adding the energy to group of station
+        /*if (stations[indexOfStation].groupWhereTheStationIs.Count > 0) */
+
+        //some advantage for CPU stations
+        if (stations[0].CPUNumber==0) CommonProperties.energyOfStationGroups[stations[indexOfStation].groupWhereTheStationIs] += stations[indexOfStation].energyRequiredToShot*4; //adding the energy to group of station
+        else CommonProperties.energyOfStationGroups[stations[indexOfStation].groupWhereTheStationIs] += stations[indexOfStation].energyRequiredToShot * 5; //adding the energy to group of station
+
         /*else stations[indexOfStation].energyOfStation += stations[indexOfStation].energyRequiredToShot;//adding the energy to station only*/
         if (stations[indexOfStation].CPUNumber > 0) ConnectionCPUStations.distributeGroupEnergy(stations[indexOfStation].groupWhereTheStationIs);
         stations[indexOfStation].energyGainEffectMain.startSize = 10;
@@ -71,7 +87,7 @@ public class ConnectionLine : MonoBehaviour
     private void FixedUpdate()
     {
         if (lineIsSet)
-        enenrgyTransporterTransform.Translate((stations[indexOfStation].stationPosition - enenrgyTransporterTransform.position).normalized * Time.fixedDeltaTime * 2f, Space.World);
+        enenrgyTransporterTransform.Translate((stations[indexOfStation].stationPosition - enenrgyTransporterTransform.position).normalized * Time.fixedDeltaTime * transporterSpeed, Space.World);
     }
     // Update is called once per frame
     void Update()
