@@ -276,15 +276,15 @@ public class StationPlayerRTS : StationClass
                         aimingRectOfThis.transform.position = aimingLine.GetPosition(1);
                         aimingRectOfThis.SetActive(true);
                     }
-                    aimingRectOfThis.transform.position = new Vector3(camera.WorldToScreenPoint(aimingLine.GetPosition(1)).x, camera.WorldToScreenPoint(aimingLine.GetPosition(1)).y, 0);
+                    if (aimingRectOfThis!=null) aimingRectOfThis.transform.position = new Vector3(camera.WorldToScreenPoint(aimingLine.GetPosition(1)).x, camera.WorldToScreenPoint(aimingLine.GetPosition(1)).y, 0);
                 }
                 else if (StationAttackButton.playerStations.Contains(this))
                 {
                     attackButton.removeStationFromButton(this);
                     if (aimingLine.enabled)
                     {
-                        aimingLine.enabled = false;
                         aimingRectOfThis.SetActive(false);
+                        aimingLine.enabled = false;
                     }
                 }
             }
@@ -303,15 +303,15 @@ public class StationPlayerRTS : StationClass
                         aimingRectOfThis.transform.position = aimingLine.GetPosition(1);
                         aimingRectOfThis.SetActive(true);
                     }
-                    aimingRectOfThis.transform.position = new Vector3(camera.WorldToScreenPoint(aimingLine.GetPosition(1)).x, camera.WorldToScreenPoint(aimingLine.GetPosition(1)).y, 0);
+                    if (aimingRectOfThis != null) aimingRectOfThis.transform.position = new Vector3(camera.WorldToScreenPoint(aimingLine.GetPosition(1)).x, camera.WorldToScreenPoint(aimingLine.GetPosition(1)).y, 0);
                 }
                 else if (StationAttackButton.playerStations.Contains(this))
                 {
                     attackButton.removeStationFromButton(this);
                     if (aimingLine.enabled)
                     {
-                        aimingLine.enabled = false;
                         aimingRectOfThis.SetActive(false);
+                        aimingLine.enabled = false;
                     }
                 }
             }

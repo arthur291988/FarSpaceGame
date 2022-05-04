@@ -67,21 +67,21 @@ public class ConnectionLine : MonoBehaviour
         lineIsSet = true;
         setTheSpeedOfTransporter();
     }
-
+    
     private void turnBackAndPassTheEnergy()
     {
         /*if (stations[indexOfStation].groupWhereTheStationIs.Count > 0) */
 
         //some advantage for CPU stations
         if (stations[0].CPUNumber==0) CommonProperties.energyOfStationGroups[stations[indexOfStation].groupWhereTheStationIs] += stations[indexOfStation].energyRequiredToShot*4; //adding the energy to group of station
-        else CommonProperties.energyOfStationGroups[stations[indexOfStation].groupWhereTheStationIs] += stations[indexOfStation].energyRequiredToShot * 5; //adding the energy to group of station
+        else CommonProperties.energyOfStationGroups[stations[indexOfStation].groupWhereTheStationIs] += stations[indexOfStation].energyRequiredToShot * 6; //adding the energy to group of station
 
         /*else stations[indexOfStation].energyOfStation += stations[indexOfStation].energyRequiredToShot;//adding the energy to station only*/
         if (stations[indexOfStation].CPUNumber > 0) ConnectionCPUStations.distributeGroupEnergy(stations[indexOfStation].groupWhereTheStationIs);
         stations[indexOfStation].energyGainEffectMain.startSize = 10;
         stations[indexOfStation].energyGainEffect.Play();
         if (stations[indexOfStation].CPUNumber == 0) stations[indexOfStation].utilaizeTheEnergy(false);
-        indexOfStation = indexOfStation == 0 ? 1 : 0;
+        indexOfStation = indexOfStation == 0 ? 1 : 0; //switching the station to move towards another one
 
     }
     private void FixedUpdate()

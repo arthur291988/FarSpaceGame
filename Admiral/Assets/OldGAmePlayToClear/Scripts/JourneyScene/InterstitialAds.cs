@@ -6,7 +6,7 @@ using System.Collections;
 
 public class InterstitialAds : MonoBehaviour, IUnityAdsListener
 {
-    private string gameId = "4009839";
+    private string gameId = "4711283";
     private string mySurfacingId = "rewardedVideo";
     private string myBannerId = "bannerPlacement";
     //private string myInterstitialId = "video";

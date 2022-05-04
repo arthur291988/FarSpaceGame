@@ -288,7 +288,7 @@ public class PanelStation : MonoBehaviour
     }
     private void updateVariablesOfStation()
     {
-        if (station.groupWhereTheStationIs!=null && station.groupWhereTheStationIs.Count > 0)
+        if (station!=null && station.groupWhereTheStationIs!=null && station.groupWhereTheStationIs.Count > 0)
         {
             energyOfStation.text = CommonProperties.energyOfStationGroups[station.groupWhereTheStationIs].ToString("0");
         }

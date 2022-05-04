@@ -646,7 +646,7 @@ public class CPUBattleShip : BattleShipClass
             }
             return closetsStation;
         }
-        else if (CommonProperties.stars.Count == 1) return CommonProperties.CPUStationsDictionary[CPUNumber - 1][0];
+        else if (CommonProperties.CPUStationsDictionary[CPUNumber - 1].Count == 1) return CommonProperties.CPUStationsDictionary[CPUNumber - 1][0];
         else return null;
     }
 

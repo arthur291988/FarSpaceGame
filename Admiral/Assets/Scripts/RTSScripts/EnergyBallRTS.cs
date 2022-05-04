@@ -31,12 +31,22 @@ public class EnergyBallRTS : MonoBehaviour
     }
     private void disactivateAndPassTheEnergy()
     {
-        if (station.groupWhereTheStationIs != null /*&& station.groupWhereTheStationIs.Count > 0*/)
+        if (station.CPUNumber == 0)
         {
-            CommonProperties.energyOfStationGroups[station.groupWhereTheStationIs] += energyAmount; //adding the energy to group of station
-            if (station.CPUNumber > 0) ConnectionCPUStations.distributeGroupEnergy(station.groupWhereTheStationIs);
+            if (station.groupWhereTheStationIs != null /*&& station.groupWhereTheStationIs.Count > 0*/)
+            {
+                CommonProperties.energyOfStationGroups[station.groupWhereTheStationIs] += energyAmount; //adding the energy to group of station
+            }
+            else station.energyOfStation += energyAmount;//adding the energy to station only
         }
-        else station.energyOfStation += energyAmount;//adding the energy to station only
+        else {
+            if (station.groupWhereTheStationIs != null /*&& station.groupWhereTheStationIs.Count > 0*/)
+            {
+                CommonProperties.energyOfStationGroups[station.groupWhereTheStationIs] += (int)(energyAmount*1.8f); //adding the energy to group of station
+                ConnectionCPUStations.distributeGroupEnergy(station.groupWhereTheStationIs);
+            }
+            else station.energyOfStation += (int)(energyAmount * 1.8f);//adding the energy to station only
+        }
         station.energyGainEffectMain.startSize = energyAmount / 10;
         station.energyGainEffect.Play();
         if (station.lifeLineAmount<0) station.increaseTheHPOfStation(energyAmount); //increasing the HP of station if it is damaged
