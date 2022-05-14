@@ -1419,18 +1419,33 @@ public class StationCPU : StationClass
     private void attackWeakestStation() {
         byte index = 0;
         stationToAttack = null;
+
+        //List<StationClass> enemyStations = new List<StationClass>();
         for (int i = 0; i < CommonProperties.allStations.Count; i++)
         {
             if (CommonProperties.allStations[i].CPUNumber != CPUNumber)
             {
                 if (index == 0) stationToAttack = CommonProperties.allStations[i];
-                else if (stationToAttack.stationDefenceFleetPower() > CommonProperties.allStations[i].stationDefenceFleetPower())
+                else
                 {
-                    stationToAttack = CommonProperties.allStations[i];
+                    if ((stationToAttack.stationPosition - stationPosition).sqrMagnitude > (CommonProperties.allStations[i].stationPosition - stationPosition).sqrMagnitude) stationToAttack = CommonProperties.allStations[i];
                 }
                 index++;
             }
         }
+
+        //for (int i = 0; i < CommonProperties.allStations.Count; i++)
+        //{
+        //    if (CommonProperties.allStations[i].CPUNumber != CPUNumber)
+        //    {
+        //        if (index == 0) stationToAttack = CommonProperties.allStations[i];
+        //        else if (stationToAttack.stationDefenceFleetPower() > CommonProperties.allStations[i].stationDefenceFleetPower())
+        //        {
+        //            stationToAttack = CommonProperties.allStations[i];
+        //        }
+        //        index++;
+        //    }
+        //}
         sendTheFleetToThePoint(stationPosition, stationToAttack.stationPosition);
     }
 
